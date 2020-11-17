@@ -1,5 +1,7 @@
 # ICTSupport
-A simple support ticket script for system support
+A simple ICT Support ticket script for system support, 
+
+Features so far:
 
 Project currently: alpha 0.0.01
 
@@ -12,3 +14,6 @@ Ready for testing? 50%
 Project design state: 10% themed
 
 Ajax state: 0% coming soon
+
+Add Device: 'Tower PC', 'Mini PC', 'Tablet', 'Phone'
+
