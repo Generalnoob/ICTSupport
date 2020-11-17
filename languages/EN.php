@@ -1,0 +1,33 @@
+<?php
+$lang_Home = 'Home';
+$lang_Home_Page = 'Home Page';
+$lang_Website_Title = 'Website Title';
+$lang_Profile = 'Profile';
+$lang_Admin = 'Admin';
+$lang_Support = 'Support';
+$lang_Logout = 'Logout';
+$lang_Support_Page = 'Support Page';
+$lang_Support = 'Support';
+$lang_Support_Areana = 'Support Areana';
+$lang_Creat_Support_Ticket = 'Create Support Ticket';
+$lang_Support_Tickets = 'Support Tickets';
+$lang_Welcome_Back = 'Welcome back';
+$lang_Your_Support_Tickets = 'Your Support Tickets!';
+$lang_Device_ID = 'Device ID';
+$lang_Issue = 'Problem';
+$lang_Status = 'Status';
+$lang_Date = 'Date';
+$lang_Response = 'Response';
+$lang_No_Tickets = 'There are no Tickets';
+$lang_Closed = 'Closed';
+$lang_Open = 'Open';
+$lang_Admin_Responded = 'Admin Responded';
+$lang_You_Responded = 'You Responded';
+$lang_Issue = 'Problem';
+$lang_Issue = 'Problem';
+$lang_Issue = 'Problem';
+$lang_Issue = 'Problem';
+$lang_Issue = 'Problem';
+$lang_Issue = 'Problem';
+$lang_Issue = 'Problem';
+?>
