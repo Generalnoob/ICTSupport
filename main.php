@@ -15,7 +15,7 @@ if (mysqli_connect_errno()) {
 // Update the charset
 mysqli_set_charset($con, db_charset);
 // The below function will check if the user is logged-in and also check the remember me cookie
-function check_loggedin($con, $redirect_file = 'index.php') {
+function check_loggedin($con, $redirect_file = 'home.php') {
 	// Check for remember me cookie variable and loggedin session variable
     if (isset($_COOKIE['rememberme']) && !empty($_COOKIE['rememberme']) && !isset($_SESSION['loggedin'])) {
     	// If the remember me cookie matches one in the database then we can update the session variables.
@@ -97,6 +97,24 @@ function loginAttempts($con, $update = TRUE) {
 		}
 	}
 	return $login_attempts;
+}
+// ICT Support Version
+$version = '0.0.02v';
+
+// Template URLS
+$URL_HOME = URL_Site.'home.php';
+$URL_PROFILE = URL_Site.'profile.php';
+$URL_ADMIN = URL_Site.'admin/index.php';
+$URL_SUPPORT = URL_Site.'support/index.php';
+$URL_LOGOUT = URL_Site.'logout.php';
+
+// Template logo
+function Add_Logo() {
+if (add_logo == 'true'){ ?>
+	<img src="<?php echo logo; ?>" alt="<?php echo Site_Name; ?>" height="55px"/> <h1><?php echo Site_Name; ?></h1>
+<?php } else { ?>
+	<h1><?php echo Site_Name; ?></h1>
+<?php }
 }
 
 ?>

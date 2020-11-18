@@ -1,4 +1,5 @@
 <?php
+// All Translatable strings are found here
 $lang_Home = 'Home';
 $lang_Home_Page = 'Home Page';
 $lang_Website_Title = 'Website Title';
@@ -23,11 +24,32 @@ $lang_Closed = 'Closed';
 $lang_Open = 'Open';
 $lang_Admin_Responded = 'Admin Responded';
 $lang_You_Responded = 'You Responded';
-$lang_Issue = 'Problem';
-$lang_Issue = 'Problem';
-$lang_Issue = 'Problem';
-$lang_Issue = 'Problem';
-$lang_Issue = 'Problem';
-$lang_Issue = 'Problem';
-$lang_Issue = 'Problem';
+$lang_Pages = 'Pages';
+$lang_User_Responded = 'User Responded';
+$lang_Support_Ticket = 'Support Ticket';
+$lang_Detailed_As_Possible = 'Please be as detailed as possible when telling us what is wrong with your device';
+$lang_Update_Support_Ticket = 'Update Support Ticket';
+$lang_Support_Ticket_By = 'Ticket By:';
+$lang_Username = 'Username:';
+$lang_Responed = 'Responed:';
+$lang_Email = 'Email:';
+$lang_Role = 'Role:';
+$lang_Account_Details = 'Your account details are below:';
+$lang_Profile_Page = 'Profile Page';
+$lang_Edit_Details = 'Edit Details';
+$lang_Password = 'Password';
+$lang_Confirm_Password = 'Confirm Password';
+$lang_Valid_Email = 'Please provide a valid email address!';
+$lang_Valid_Username = 'Username must contain only letters and numbers!';
+$lang_Password_Must = 'Password must be between 5 and 20 characters long!';
+$lang_Password_Match = 'Passwords do not match!';
+$lang_Input_Is_Empty = 'The input fields must not be empty!';
+$lang_Input_Is_Empty = 'The input fields must not be empty!';
+$lang_Input_Is_Empty = 'The input fields must not be empty!';
+$lang_Input_Is_Empty = 'The input fields must not be empty!';
+$lang_Input_Is_Empty = 'The input fields must not be empty!';
+$lang_Input_Is_Empty = 'The input fields must not be empty!';
+$lang_Input_Is_Empty = 'The input fields must not be empty!';
+$lang_Input_Is_Empty = 'The input fields must not be empty!';
+
 ?>

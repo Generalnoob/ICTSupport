@@ -1,6 +1,10 @@
 <?php
+//Call main functions
 include '../main.php';
 check_loggedin($con);
+//Call Language File
+languages($con);
+include '../languages/'.languages($con).'.php';
 // Default input product values
 $support = array(
 	'device_id' => '',
@@ -49,49 +53,28 @@ if (isset($_GET['id'])) {
     }
 }
 ?>
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,minimum-scale=1">
-		<title>Create Support Ticket</title>
-		<link href="../style.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-	</head>
-	<body class="loggedin">
-		<nav class="navtop">
-			<div>
-				<h1>Create Support Ticket</h1>
-				<ul class="nav-top">
-				<li><a href="../home.php"><i class="fas fa-home"></i>Home</a></li>
-				<li><a href="../profile.php"><i class="fas fa-user-circle"></i>Profile</a></li>
-				<li><?php if ($_SESSION['role'] == 'Admin'): ?>
-				<a href="../admin/index.php" target="_blank"><i class="fas fa-user-cog"></i>Admin</a>
-				<?php endif; ?></li>
-				<li><a href="index.php"><i class="fas fa-desktop"></i>Support</a></li>
-				<li><a href="../logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
-					</ul>
-			</div>
-		</nav>
+<?php 
+$Page_Name = $lang_Support_Areana;
+include '../template/header.php'; ?>
 		<div class="content">
-			<h2>Support Areana</h2>
+			<h2><?php echo $lang_Support_Areana; ?></h2>
 			<div class="buttons_link"><div class="button_links">
-   			<a href="add_support.php">Create Support Ticket</a>
+   			<a href="add_support.php"><?php echo $lang_Creat_Support_Ticket; ?></a>
 		</div>
 			<?php if ($_SESSION['role'] == 'Admin' OR 'ICT Support'): ?> <div class="button_links">
-   			<a href="index.php">Support Tickets</a>
+   			<a href="index.php"><?php echo $lang_Support_Tickets; ?></a>
 		</div><?php endif; ?></div>
 			<div class="block">
-			<h2><?=$page?> Support Ticket</h2>
+			<h2><?=$page?> <?php echo $lang_Support_Ticket; ?></h2>
     <form action="" method="post" class="form responsive-width-100">
         <input type="hidden" id="user_id" name="user_id" value="<?php if (isset ($support['user_id'])){ echo $support['user_id']; } else { echo $_SESSION['id']; } ?>" required>
 		<input type="hidden" id="date" name="date" value="<?php if (isset ($support['date'])){ echo $support['date']; } else { echo $date->format('d-m-Y H:i:s'); } ?>" required>
 		<input type="hidden" id="status" name="status" value="2" required>
 		<input type="hidden" id="response" name="response" value="3" required>
-		<label for="username">Device ID</label>
+		<label for="username"><?php echo $lang_Device_ID; ?></label>
         <input type="text" id="device_id" name="device_id" placeholder="e.g. 002" value="<?=$support['device_id']?>" required>
-		<label for="username">problem</label>
-        <textarea id="problem" name="problem" placeholder="Please be as detailed as possible when telling us what is wrong with your device" required><?=$support['problem']?></textarea>
+		<label for="username"><?php echo $lang_Issue; ?></label>
+        <textarea id="problem" name="problem" placeholder="<?php echo $lang_Detailed_As_Possible; ?>" required><?=$support['problem']?></textarea>
 		
         <div class="submit-btns">
             <input type="submit" name="submit" value="Submit">
@@ -102,5 +85,6 @@ if (isset($_GET['id'])) {
     </form>
 			</div>
 		</div>
+		<div class="footer">Created By David Lomas | ICTSupport <?=$version?> GNU GPL</div>
 	</body>
 </html>

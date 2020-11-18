@@ -11,10 +11,10 @@ $dtmt->execute();
 $dtmt->store_result();
 $dtmt->bind_result($id, $device_type, $department, $device_id, $make, $model);
 // query to get all support tickets from the database
-$xtmt = $con->prepare('SELECT id, device_id, user_id, status, problem, solution, date FROM support WHERE status = 2 ORDER BY date DESC LIMIT 5');
+$xtmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 ORDER BY date DESC LIMIT 5');
 $xtmt->execute();
 $xtmt->store_result();
-$xtmt->bind_result($id, $device_id, $user_id, $status, $problem, $solution, $date);
+$xtmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
 ?>
 
 <?=template_admin_header('Admin Home')?>

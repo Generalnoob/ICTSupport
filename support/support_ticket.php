@@ -1,6 +1,9 @@
 <?php
 include '../main.php';
 check_loggedin($con);
+//Call Language File
+languages($con);
+include '../languages/'.languages($con).'.php';
 // Default input product values
 $support = array(
 	'device_id' => '',
@@ -8,9 +11,9 @@ $support = array(
 	'solution' => '',
 );
 $date = new DateTime();
-
+$page = 'Update';
 if (isset($_GET['id'])) {
-    // Get the account from the database
+    // Get the device from the database
     $stmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE id = ?');
     $stmt->bind_param('i', $_GET['id']);
     $stmt->execute();
@@ -24,9 +27,7 @@ if (isset($_GET['id'])) {
     $atmt->bind_result($account['username']);
     $atmt->fetch();
     $atmt->close();
-    // ID param exists, edit an existing device
-    $page = 'Update';
-    // Update the device
+       // Update the device
         if (isset($_POST['submit'])) {
         $stmt = $con->prepare('INSERT IGNORE INTO support_chat (ticket_id, response, user_id, date, response_read) VALUES (?,?,?,?,?)');
         $stmt->bind_param('sssss', $_POST['ticket_id'], $_POST['response'], $_POST['user_id'], $_POST['date'], $_POST['response_read']);
@@ -46,41 +47,20 @@ if (isset($_GET['id'])) {
     }
 }
 ?>
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,minimum-scale=1">
-		<title>Support Ticket</title>
-		<link href="../style.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-	</head>
-	<body class="loggedin">
-		<nav class="navtop">
-			<div>
-				<h1>Support Ticket</h1>
-				<ul class="nav-top">
-				<li><a href="../home.php"><i class="fas fa-home"></i>Home</a></li>
-				<li><a href="../profile.php"><i class="fas fa-user-circle"></i>Profile</a></li>
-				<li><?php if ($_SESSION['role'] == 'Admin'): ?>
-				<a href="../admin/index.php" target="_blank"><i class="fas fa-user-cog"></i>Admin</a>
-				<?php endif; ?></li>
-				<li><a href="index.php"><i class="fas fa-desktop"></i>Support</a></li>
-				<li><a href="../logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
-					</ul>
-			</div>
-		</nav>
-		<div class="content">
-			<h2>Support Areana</h2>
+	<?php 
+$Page_Name = $lang_Support_Ticket;
+include '../template/header.php'; ?>
+	<div class="content">
+			<h2><?php echo $lang_Support_Areana; ?></h2>
 			<div class="buttons_link"><div class="button_links">
-   			<a href="add_support.php">Create Support Ticket</a>
+   			<a href="add_support.php"><?php echo $lang_Creat_Support_Ticket; ?></a>
 		</div>
 			<div class="button_links">
-   			<a href="index.php">Support Tickets</a>
+   			<a href="index.php"><?php echo $lang_Support_Tickets; ?></a>
 		</div></div>
 			<div class="block">
-			<h2><?=$page?> Support Ticket</h2>
-				<?php echo '<br>Device ID: '.$support['device_id'].' by '.$account['username'].'</br>'; echo 'Problem: '.$support['problem'].'</br>';
+			<h2><?php echo $lang_Update_Support_Ticket; ?></h2>
+				<?php echo '<br>'.$lang_Device_ID.': '.$support['device_id'].' '.$lang_Support_Ticket_By.' '.$account['username'].'</br>'; echo ''.$lang_Issue.':</br > '.$support['problem'].'</br>';
 				// Get the system specs from the database
     $dtmt = $con->prepare('SELECT id, device_type, department, device_id, motherboard, ram, processor, gpu, sound_card, wifi, bluetooth, simcard, make, model, camera, os FROM devices WHERE device_id = ?');
     $dtmt->bind_param('i', $support['device_id']);
@@ -117,7 +97,7 @@ if (isset($_GET['id'])) {
     			$uctmt->fetch();
     			$uctmt->close(); ?>
 					<td>
-					<div class="username">Username: <?=$username['username']?></div>
+					<div class="username"><?php echo $lang_Username; ?> <?=$username['username']?></div>
 					<div class="response"><?=$response?></div>
 					</td>
 				</tr>
@@ -136,7 +116,7 @@ if (isset($_GET['id'])) {
 					<?php else: ?>
 		<input type="hidden" id="response_read" name="response_read" value="1" required>
 					<?php endif; ?>
-		<label for="username">Responed</label>
+		<label for="username"><?php echo $lang_Responed; ?></label>
         <textarea id="response" name="response" placeholder="" required></textarea>
 		<p></p>
         <div class="submit-btns">
@@ -148,5 +128,6 @@ if (isset($_GET['id'])) {
     </form>
 			</div>
 		</div>
+<div class="footer">Created By David Lomas | ICTSupport <?=$version?> GNU GPL</div>
 	</body>
 </html>

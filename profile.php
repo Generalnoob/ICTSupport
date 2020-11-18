@@ -1,6 +1,8 @@
 <?php
 include 'main.php';
 check_loggedin($con);
+languages($con);
+include 'languages/'.languages($con).'.php';
 // output message (errors, etc)
 $msg = '';
 // We don't have the password or email info stored in sessions so instead we can get the results from the database.
@@ -15,15 +17,15 @@ $stmt->close();
 if (isset($_POST['username'], $_POST['password'], $_POST['cpassword'], $_POST['email'])) {
 	// Make sure the submitted registration values are not empty.
 	if (empty($_POST['username']) || empty($_POST['email'])) {
-		$msg = 'The input fields must not be empty!';
+		$msg = $lang_Input_Is_Empty;
 	} else if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-		$msg = 'Please provide a valid email address!';
+		$msg = $lang_Valid_Email;
 	} else if (!preg_match('/^[a-zA-Z0-9]+$/', $_POST['username'])) {
-	    $msg = 'Username must contain only letters and numbers!';
+	    $msg = $lang_Valid_Username;
 	} else if (!empty($_POST['password']) && (strlen($_POST['password']) > 20 || strlen($_POST['password']) < 5)) {
-		$msg = 'Password must be between 5 and 20 characters long!';
+		$msg = $lang_Password_Must;
 	} else if ($_POST['cpassword'] != $_POST['password']) {
-		$msg = 'Passwords do not match!';
+		$msg = $lang_Password_Match;
 	}
 	if (empty($msg)) {
 		// Check if new username or email already exists in database
@@ -59,48 +61,28 @@ if (isset($_POST['username'], $_POST['password'], $_POST['cpassword'], $_POST['e
 		}
 	}
 }
+include 'template/header.php'; 
 ?>
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,minimum-scale=1">
-		<title>Profile Page</title>
-		<link href="style.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-	</head>
-	<body class="loggedin">
-		<nav class="navtop">
-			<div>
-				<h1>Website Title</h1>
-				<a href="home.php"><i class="fas fa-home"></i>Home</a>
-				<a href="profile.php"><i class="fas fa-user-circle"></i>Profile</a>
-				<?php if ($_SESSION['role'] == 'Admin'): ?>
-				<a href="admin/index.php" target="_blank"><i class="fas fa-user-cog"></i>Admin</a>
-				<?php endif; ?>
-				<a href="logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a>
-			</div>
-		</nav>
 		<?php if (!isset($_GET['action'])): ?>
 		<div class="content profile">
-			<h2>Profile Page</h2>
+			<h2><?php echo $lang_Profile_Page; ?></h2>
 			<div class="block">
-				<p>Your account details are below:</p>
+				<p><?php echo $lang_Account_Details; ?></p>
 				<table>
 					<tr>
-						<td>Username:</td>
+						<td><?php echo $lang_Username; ?></td>
 						<td><?=$_SESSION['name']?></td>
 					</tr>
 					<tr>
-						<td>Email:</td>
+						<td><?php echo $lang_Email; ?></td>
 						<td><?=$email?></td>
 					</tr>
 					<tr>
-						<td>Role:</td>
+						<td><?php echo $lang_Role; ?></td>
 						<td><?=$role?></td>
 					</tr>
 				</table>
-				<a class="profile-btn" href="profile.php?action=edit">Edit Details</a>
+				<a class="profile-btn" href="profile.php?action=edit"><?php echo $lang_Edit_Details; ?></a>
 			</div>
 		</div>
 		<?php elseif ($_GET['action'] == 'edit'): ?>
@@ -108,13 +90,13 @@ if (isset($_POST['username'], $_POST['password'], $_POST['cpassword'], $_POST['e
 			<h2>Edit Profile Page</h2>
 			<div class="block">
 				<form action="profile.php?action=edit" method="post">
-					<label for="username">Username</label>
+					<label for="username"><?php echo $lang_Username; ?></label>
 					<input type="text" value="<?=$_SESSION['name']?>" name="username" id="username" placeholder="Username">
-					<label for="password">Password</label>
+					<label for="password"><?php echo $lang_Password; ?></label>
 					<input type="password" name="password" id="password" placeholder="Password">
-					<label for="cpassword">Confirm Password</label>
+					<label for="cpassword"><?php echo $lang_Confirm_Password; ?></label>
 					<input type="password" name="cpassword" id="cpassword" placeholder="Confirm Password">
-					<label for="email">Email</label>
+					<label for="email"><?php echo $lang_Email; ?></label>
 					<input type="email" value="<?=$email?>" name="email" id="email" placeholder="Email">
 					<br>
 					<input class="profile-btn" type="submit" value="Save">
@@ -123,5 +105,4 @@ if (isset($_POST['username'], $_POST['password'], $_POST['cpassword'], $_POST['e
 			</div>
 		</div>
 		<?php endif; ?>
-	</body>
-</html>
+<?php include 'template/footer.php'; ?>
