@@ -1,6 +1,6 @@
 <?php
 // The main file contains the database connection, session initializing, and functions, other PHP files will depend on this file.
-// Include thee configuration file
+// Include the configuration file
 include_once 'config.php';
 // We need to use sessions, so you should always start sessions using the below function
 session_start();
@@ -15,7 +15,7 @@ if (mysqli_connect_errno()) {
 // Update the charset
 mysqli_set_charset($con, db_charset);
 // The below function will check if the user is logged-in and also check the remember me cookie
-function check_loggedin($con, $redirect_file = 'home.php') {
+function check_loggedin($con, $redirect_file = URL_Site.'index.php') {
 	// Check for remember me cookie variable and loggedin session variable
     if (isset($_COOKIE['rememberme']) && !empty($_COOKIE['rememberme']) && !isset($_SESSION['loggedin'])) {
     	// If the remember me cookie matches one in the database then we can update the session variables.
@@ -99,7 +99,7 @@ function loginAttempts($con, $update = TRUE) {
 	return $login_attempts;
 }
 // ICT Support Version
-$version = '0.0.02v';
+$version = '0.0.04v';
 
 // Template URLS
 $URL_HOME = URL_Site.'home.php';

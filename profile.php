@@ -61,7 +61,7 @@ if (isset($_POST['username'], $_POST['password'], $_POST['cpassword'], $_POST['e
 		}
 	}
 }
-include 'template/header.php'; 
+include 'template/'.Site_Theme.'/header.php'; 
 ?>
 		<?php if (!isset($_GET['action'])): ?>
 		<div class="content profile">
@@ -105,4 +105,4 @@ include 'template/header.php';
 			</div>
 		</div>
 		<?php endif; ?>
-<?php include 'template/footer.php'; ?>
+<?php include 'template/'.Site_Theme.'/footer.php'; ?>

@@ -14,16 +14,33 @@ if (!empty($_POST)) {
 }
 ?>
 
-<?=template_admin_header('Email Template')?>
+<?=template_admin_header('Settings')?>
 
 <h2>Settings</h2>
 
 <div class="content-block">
+	** NOTE: Please make sure config.php is writable **
     <form action="" method="post" class="form responsive-width-100">
-        <?php for($i = 0; $i < count($matches[1]); $i++): ?>
-        <label><?=str_replace('_', ' ', $matches[1][$i])?></label>
-        <input type="text" name="<?=$matches[1][$i]?>" value="<?=htmlspecialchars($matches[2][$i], ENT_QUOTES)?>" placeholder="<?=str_replace('_', ' ', $matches[1][$i])?>">
-        <?php endfor; ?>
+		<label>Site Name - Please name your site</label>
+        <input type="text" name="Site_Name" value="<?=htmlspecialchars(Site_Name, ENT_QUOTES)?>" placeholder="<?=str_replace('_', ' ', Site_Name)?>">
+		<label>Database Host - this is normaly localhost</label>
+       	<input type="text" name="db_host" value="<?=htmlspecialchars(db_host, ENT_QUOTES)?>" placeholder="<?=str_replace('_', ' ', db_host)?>">
+		<label>Database User - this is normaly found in your web hosting panel</label>
+		<input type="text" name="db_user" value="<?=htmlspecialchars(db_user, ENT_QUOTES)?>" placeholder="<?=str_replace('_', ' ', db_user)?>">
+		<label>Database Password - this is normaly found in your web hosting panel</label>
+		<input type="text" name="db_pass" value="<?=htmlspecialchars(db_pass, ENT_QUOTES)?>" placeholder="<?=str_replace('_', ' ', db_pass)?>">
+		<label>Database Name - this is normaly found in your web hosting panel</label>
+		<input type="text" name="db_name" value="<?=htmlspecialchars(db_name, ENT_QUOTES)?>" placeholder="<?=str_replace('_', ' ', db_name)?>">
+		<label>Database Charset - only change this is your language is not supported</label>
+		<input type="text" name="db_charset" value="<?=htmlspecialchars(db_charset, ENT_QUOTES)?>" placeholder="<?=str_replace('_', ' ', db_charset)?>">
+		<label>Require Account Activation - Set this to true is you wish for your users to activate their account, set /leave it on false to leave this feature disabled.</label>
+		<input type="text" name="account_activation" value="<?=htmlspecialchars(account_activation, ENT_QUOTES)?>" placeholder="<?=str_replace('_', ' ', account_activation)?>">
+		<label>Email From - Set this for the emails sent from ICT Support.</label>
+		<input type="text" name="mail_from" value="<?=htmlspecialchars(mail_from, ENT_QUOTES)?>" placeholder="<?=str_replace('_', ' ', mail_from)?>">
+		<label>Activation Link - This is the link to the activation file, it should be domain.com/activate.php unless you have the script in a subfolder.</label>
+		<input type="text" name="activation_link" value="<?=htmlspecialchars(activation_link, ENT_QUOTES)?>" placeholder="<?=str_replace('_', ' ', activation_link)?>">
+		<label>Site URL - this is the complete url for the script make sure to put http:// at the front, if using in a internal network make sure to us the IP address and not localhost e.g http://192.168.0.1/.</label>
+		<input type="text" name="URL_Site" value="<?=htmlspecialchars(URL_Site, ENT_QUOTES)?>" placeholder="<?=str_replace('_', ' ', URL_Site)?>">
         <input type="submit" value="Save">
     </form>
 </div>

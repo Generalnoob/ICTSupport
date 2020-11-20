@@ -46,10 +46,8 @@ if (isset($_GET['id'])) {
         exit;
     }
 }
-?>
-	<?php 
 $Page_Name = $lang_Support_Ticket;
-include '../template/header.php'; ?>
+include '../template/'.Site_Theme.'/header.php'; ?>
 	<div class="content">
 			<h2><?php echo $lang_Support_Areana; ?></h2>
 			<div class="buttons_link"><div class="button_links">
@@ -128,6 +126,4 @@ include '../template/header.php'; ?>
     </form>
 			</div>
 		</div>
-<div class="footer">Created By David Lomas | ICTSupport <?=$version?> GNU GPL</div>
-	</body>
-</html>
+<?php include '../template/'.Site_Theme.'/footer.php'; ?>

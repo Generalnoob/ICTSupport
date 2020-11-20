@@ -20,12 +20,14 @@ define('account_activation', 'false');
 // Change "Your Company Name" and "yourdomain.com", do not remove the < and >
 define('mail_from', 'Your Company Name <noreply@yourdomain.com>');
 // Link to activation file, update this
-define('activation_link', 'localhost/ictsupport/activate.php');
+define('activation_link', '192.168.0.208/ictsupport/activate.php');
 // Link to logo
-define('logo', 'http://localhost/ictsupport/images/logo.png');
+define('logo', 'http://192.168.0.208/ictsupport/images/logo.png');
 // Is logo True
 define('add_logo', 'true');
 // Defines URL
-define('URL_Site', 'http://localhost/ictsupport/');
+define('URL_Site', 'http://192.168.0.208/ictsupport/');
+// Defines Theme
+define('Site_Theme', 'default');
 
 ?>

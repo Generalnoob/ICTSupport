@@ -38,6 +38,7 @@ echo <<<EOT
 			<a href="index.php"><i class="fas fa-home"></i>Home</a>
             <a href="accounts.php"><i class="fas fa-users"></i>Accounts</a>
 			<a href="devices.php"><i class="fas fa-tools"></i>Devices</a>
+			<a href="themes.php"><i class="fas fa-fill-drip"></i>Themes</a>
             <a href="emailtemplate.php"><i class="fas fa-envelope"></i>Email Template</a>
             <a href="settings.php"><i class="fas fa-tools"></i>Settings</a>
 			<a href="../logout.php"><i class="fas fa-sign-out-alt"></i>Log Out</a>
@@ -48,6 +49,7 @@ EOT;
 // Template admin footer
 function template_admin_footer() {
 echo <<<EOT
+<div class="responsive-width-100 footer">Created By David Lomas | ICTSupport GNU GPL</div>	
         </main>
         <script>
         document.querySelector(".responsive-toggle").onclick = function(event) {

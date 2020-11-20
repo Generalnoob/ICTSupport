@@ -20,7 +20,7 @@ $stmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
 ?>
 <?php 
 $Page_Name = $lang_Support_Tickets;
-include '../template/header.php'; ?>
+include '../template/'.Site_Theme.'/header.php'; ?>
 		<div class="content">
 			<h2><?php echo $lang_Support_Areana; ?></h2>
 			<div class="buttons_link"><div class="button_links">
@@ -38,11 +38,11 @@ include '../template/header.php'; ?>
             <thead>
                 <tr class="head_banners">
                     <td>#</td>
-                    <td><i class="fas fa-address-card"></i> <?php echo $lang_Device_ID; ?></td>
-					<td><i class="fas fa-user-cog"></i> <?php echo $lang_Issue; ?></td>
-                    <td><i class="fas fa-battery-half"></i> <?php echo $lang_Status; ?></td>
-					<td><i class="fas fa-calendar-week"></i> <?php echo $lang_Date; ?></td>
-					<td><i class="fas fa-comments"></i> <?php echo $lang_Response; ?></td>
+                    <td><div class="response_small"><i class="fas fa-address-card" title="<?php echo $lang_Device_ID; ?>"></i></div> <div class="response_large"><?php echo $lang_Device_ID; ?></div></td>
+					<td><div class="response_small"><i class="fas fa-user-cog" title="<?php echo $lang_Issue; ?>"></i> </div><div class="response_large"><?php echo $lang_Issue; ?></div></td>
+                    <td><div class="response_small"><i class="fas fa-battery-half" title="<?php echo $lang_Status; ?>"></i> </div><div class="response_large"><?php echo $lang_Status; ?></div></td>
+					<td><div class="response_small"><i class="fas fa-calendar-week" title="<?php echo $lang_Date; ?>"></i> </div><div class="response_large"><?php echo $lang_Date; ?></div></td>
+					<td><div class="response_small"><i class="fas fa-comments" title="<?php echo $lang_Response; ?>"></i></div><div class="response_large"><?php echo $lang_Response; ?></div></td>
                 </tr>
             </thead>
             <tbody>
@@ -65,7 +65,9 @@ include '../template/header.php'; ?>
 				$restmt->store_result();
 				$restmt->bind_result($reesponse_read);?>
 					<?php while ($restmt->fetch()): ?>
-					<td><?php if ($reesponse_read == '2'){echo $lang_Admin_Responded;} else {if ($reesponse_read == '1'){echo $lang_You_Responded;} else {echo 'No Response';}}?></td>
+					<td><div class="response_small">
+						<?php if ($reesponse_read == '2'){echo '<i class="response_red fas fa-comments" title="'.$lang_Admin_Responded.'"></i>';} else {if ($reesponse_read == '1'){echo '<i class="response_green fas fa-comments" title="'.$lang_User_Responded.'"></i>';} else {echo '<i class="response_grey fas fa-comments" title="No Response"></i>';}}?></div><div class="response_large"><?php if ($reesponse_read == '2'){echo $lang_Admin_Responded;} else {if ($reesponse_read == '1'){echo $lang_User_Responded;} else {echo 'No Response';}}?></div>
+					</td>
 					<?php endwhile; ?>
 				</tr>
                 <?php endwhile;?>
@@ -98,11 +100,11 @@ echo $pagLinks . '</div>'; ?>
             <thead>
                 <tr class="head_banners">
                     <td>#</td>
-                    <td><i class="fas fa-address-card"></i> <?php echo $lang_Device_ID; ?></td>
-					<td><i class="fas fa-user-cog"></i> <?php echo $lang_Issue; ?></td>
-                    <td><i class="fas fa-battery-half"></i> <?php echo $lang_Status; ?></td>
-					<td><i class="fas fa-calendar-week"></i> <?php echo $lang_Date; ?></td>
-					<td><i class="fas fa-comments"></i> <?php echo $lang_Response; ?></td>
+					<td><div class="response_small"><i class="fas fa-address-card" title="<?php echo $lang_Device_ID; ?>"></i></div> <div class="response_large"><?php echo $lang_Device_ID; ?></div></td>
+					<td><div class="response_small"><i class="fas fa-user-cog" title="<?php echo $lang_Issue; ?>"></i> </div><div class="response_large"><?php echo $lang_Issue; ?></div></td>
+                    <td><div class="response_small"><i class="fas fa-battery-half" title="<?php echo $lang_Status; ?>"></i> </div><div class="response_large"><?php echo $lang_Status; ?></div></td>
+					<td><div class="response_small"><i class="fas fa-calendar-week" title="<?php echo $lang_Date; ?>"></i> </div><div class="response_large"><?php echo $lang_Date; ?></div></td>
+					<td><div class="response_small"><i class="fas fa-comments" title="<?php echo $lang_Response; ?>"></i></div><div class="response_large"><?php echo $lang_Response; ?></div></td>
                 </tr>
             </thead>
             <tbody>
@@ -124,8 +126,10 @@ echo $pagLinks . '</div>'; ?>
 				$rstmt->execute();
 				$rstmt->store_result();
 				$rstmt->bind_result($response_read);?>
-					<?php while ($rstmt->fetch()): ?>
-					<td><?php if ($response_read == '2'){echo $lang_Admin_Responded;} else {if ($response_read == '1'){echo $lang_User_Responded;} else {echo 'No Response';}}?></td>
+				<?php while ($rstmt->fetch()): ?>
+					<td><div class="response_small">
+						<?php if ($response_read == '2'){echo '<i class="response_red fas fa-comments" title="'.$lang_Admin_Responded.'"></i>';} else {if ($response_read == '1'){echo '<i class="response_green fas fa-comments" title="'.$lang_User_Responded.'"></i>';} else {echo '<i class="response_grey fas fa-comments" title="No Response"></i>';}}?></div><div class="response_large"><?php if ($response_read == '2'){echo $lang_Admin_Responded;} else {if ($response_read == '1'){echo $lang_User_Responded;} else {echo 'No Response';}}?></div>
+					</td>
 					<?php endwhile; ?>
 				</tr>
                 <?php endwhile; ?>
@@ -147,6 +151,4 @@ echo $pagLinks . '</div>'; ?>
 				</p>
 			</div><?php endif; ?>
 		</div>
-		<div class="footer">Created By David Lomas | ICTSupport <?=$version?> GNU GPL</div>
-	</body>
-</html>
+	<?php include '../template/'.Site_Theme.'/footer.php'; ?>
