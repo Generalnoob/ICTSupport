@@ -3,15 +3,15 @@ A simple ICT Support ticket script for system support,
 
 Features so far:
 
-Project currently: alpha 0.0.02
+Project currently: alpha 0.0.04v
 
 Total translation: 75%
 
 Functionality: 100% (from what i have tested)
 
-Ready for testing? 60%
+Ready for testing? 70%
 
-Project design state: 30% themed
+Project design state: 50% themed
 
 Ajax state: 0% coming soon
 
