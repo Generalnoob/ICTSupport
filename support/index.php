@@ -19,6 +19,7 @@ $stmt->store_result();
 $stmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
 ?>
 <?php 
+//Page Name
 $Page_Name = $lang_Support_Tickets;
 include '../template/'.Site_Theme.'/header.php'; ?>
 		<div class="content">
@@ -46,19 +47,21 @@ include '../template/'.Site_Theme.'/header.php'; ?>
                 </tr>
             </thead>
             <tbody>
-                <?php if ($stmt->num_rows == 0): ?>
+                <?php //Check if there is a ticket
+				if ($stmt->num_rows == 0): ?>
                 <tr>
                     <td colspan="4" style="text-align:center;"><?php echo $lang_No_Tickets; ?></td>
                 </tr>
                 <?php else: ?>
-                <?php while ($stmt->fetch()): ?>
+                <?php // list the tickets
+				while ($stmt->fetch()): ?>
                 <tr class="details" onclick="location.href='support_ticket.php?id=<?=$id?>'">
 					<td></td>
 					<td><?=$device_id?></td>
                     <td class="problem"><?php echo substr($problem,0,70); ?>... </td>
                     <td><?php if ($status == 1){echo $lang_Closed;}else{echo $lang_Open;}; ?></td>
                     <td><?=$date?></td>
-					<?php 	
+					<?php //Check for responses and display who responded	
 				$response_limit = '1';
 				$restmt = $con->prepare('SELECT response_read FROM support_chat WHERE ticket_id = '.$id.' ORDER BY id DESC LIMIT '.$response_limit.'');
 				$restmt->execute();

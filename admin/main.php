@@ -15,41 +15,10 @@ $stmt->close();
 if ($role != 'Admin') {
     exit('You do not have permission to access this page!');
 }
-// Template admin header
-function template_admin_header($title) {
-echo <<<EOT
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,minimum-scale=1">
-		<title>$title</title>
-		<link href="admin.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-	</head>
-	<body class="admin">
-        <header>
-            <h1>Admin Panel</h1>
-            <a class="responsive-toggle" href="#">
-                <i class="fas fa-bars"></i>
-            </a>
-        </header>
-        <aside class="responsive-width-100 responsive-hidden">
-			<a href="index.php"><i class="fas fa-home"></i>Home</a>
-            <a href="accounts.php"><i class="fas fa-users"></i>Accounts</a>
-			<a href="devices.php"><i class="fas fa-tools"></i>Devices</a>
-			<a href="themes.php"><i class="fas fa-fill-drip"></i>Themes</a>
-            <a href="emailtemplate.php"><i class="fas fa-envelope"></i>Email Template</a>
-            <a href="settings.php"><i class="fas fa-tools"></i>Settings</a>
-			<a href="../logout.php"><i class="fas fa-sign-out-alt"></i>Log Out</a>
-        </aside>
-        <main class="responsive-width-100">
-EOT;
-}
 // Template admin footer
 function template_admin_footer() {
 echo <<<EOT
-<div class="responsive-width-100 footer">Created By David Lomas | ICTSupport GNU GPL</div>	
+<div class="responsive-width-100 footer">Created By <a href="https://davidlomas.eu" title="David Lomas" target="_blank">David Lomas</a> | <a href="https://davidlomas.eu/ict-support-script-free/" title="ICT Support" target="_blank">ICTSupport</a> GNU GPL</div>	
         </main>
         <script>
         document.querySelector(".responsive-toggle").onclick = function(event) {

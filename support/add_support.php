@@ -67,7 +67,7 @@ include '../template/'.Site_Theme.'/header.php'; ?>
 			<h2><?=$page?> <?php echo $lang_Support_Ticket; ?></h2>
     <form action="" method="post" class="form responsive-width-100">
         <input type="hidden" id="user_id" name="user_id" value="<?php if (isset ($support['user_id'])){ echo $support['user_id']; } else { echo $_SESSION['id']; } ?>" required>
-		<input type="hidden" id="date" name="date" value="<?php if (isset ($support['date'])){ echo $support['date']; } else { echo $date->format('d-m-Y H:i:s'); } ?>" required>
+		<input type="hidden" id="date" name="date" value="<?php if (isset ($support['date'])){ echo $support['date']; } else { echo $date->format('Y-m-d H:i:s'); } ?>" required>
 		<input type="hidden" id="status" name="status" value="2" required>
 		<input type="hidden" id="response" name="response" value="3" required>
 		<label for="username"><?php echo $lang_Device_ID; ?></label>

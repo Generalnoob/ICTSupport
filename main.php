@@ -99,7 +99,7 @@ function loginAttempts($con, $update = TRUE) {
 	return $login_attempts;
 }
 // ICT Support Version
-$version = '0.0.04v';
+$version = '0.0.05v';
 
 // Template URLS
 $URL_HOME = URL_Site.'home.php';

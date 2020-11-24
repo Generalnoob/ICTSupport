@@ -11,20 +11,84 @@ $dtmt->execute();
 $dtmt->store_result();
 $dtmt->bind_result($id, $device_type, $department, $device_id, $make, $model);
 // query to get all support tickets from the database
-$xtmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 ORDER BY date DESC LIMIT 5');
+$xtmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 ORDER BY date DESC');
 $xtmt->execute();
 $xtmt->store_result();
 $xtmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
-?>
 
-<?=template_admin_header('Admin Home')?>
+$ctmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 1 AND date >= DATE_SUB(now(),INTERVAL 1 WEEK) ');
+$ctmt->execute();
+$ctmt->store_result();
+$ctmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+
+$otmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 AND date >= DATE_SUB(now(),INTERVAL 1 WEEK) ');
+$otmt->execute();
+$otmt->store_result();
+$otmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+
+$c1tmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 1 AND date >= DATE_SUB(now(),INTERVAL 1 MONTH) ');
+$c1tmt->execute();
+$c1tmt->store_result();
+$c1tmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+
+$o1tmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 AND date >= DATE_SUB(now(),INTERVAL 1 MONTH) ');
+$o1tmt->execute();
+$o1tmt->store_result();
+$o1tmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+include 'header.php';
+?>
 
 <h2>Home</h2>
 
 <div class="content-block">
+	<script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Weekly Tickets'],
+          ['Open Tickets',     <?php echo $otmt->num_rows;?>],
+          ['Closed Tickets',      <?php echo $ctmt->num_rows;?>],
+        ]);
+
+        var options = {
+          title: 'Weekly Tickets',
+          pieHole: 0.4,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart1'));
+        chart.draw(data, options);
+      }
+    </script>
+<div id="donutchart1" style="width: 500px; height: 500px;float:left;display:block;"></div>
+	
+	<script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Weekly Tickets'],
+          ['Open Tickets',     <?php echo $o1tmt->num_rows;?>],
+          ['Closed Tickets',      <?php echo $c1tmt->num_rows;?>],
+        ]);
+
+        var options = {
+          title: 'Monthly Tickets',
+          pieHole: 0.4,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('donutchart2'));
+        chart.draw(data, options);
+      }
+    </script>
+<div id="donutchart2" style="width: 500px; height: 500px;float:left;display:block;"></div>
+
+</div>
+
+<div class="content-block">
     <div class="table_users">
 		<div class="title">Latest Accounts</div>
-		<div class="sub_title">Total Users: <?php  echo $stmt->num_rows; ?></div>
+		<div class="sub_title">Total Users: <?php echo $stmt->num_rows; ?></div>
         <table  cellspacing="0">
             <thead>
                 <tr>
@@ -88,35 +152,6 @@ $xtmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
             </tbody>
         </table>
     </div>
-	<div class="table_devices">
-		<div class="title">Latest Support Tickets</div>
-		<div class="sub_title">Total Open Tickets: <?php  echo $xtmt->num_rows; ?></div>
-        <table  cellspacing="0">
-            <thead>
-                <tr>
-                    <td>#</td>
-                    <td>Device ID</td>
-                    <td class="responsive-hidden">Problem</td>
-                    <td class="responsive-hidden">Status</td>
-                    <td class="responsive-hidden">Date</td>
-				</tr>
-            </thead>
-            <tbody>
-                <?php if ($xtmt->num_rows == 0): ?>
-                <tr>
-                    <td colspan="8" style="text-align:center;">There are no devices</td>
-                </tr>
-                <?php else: ?>
-                <?php while ($xtmt->fetch()): ?>
-                <tr class="details">
-                    <td></td>
-                    <td><?=$device_id?></td>                 
-                    <td class="responsive-hidden"><?php echo substr($problem,0,40); ?>... </td>
-                    <td class="responsive-hidden"><?=$status?></td>
-                    <td class="responsive-hidden"><?=$date?></td>
-                </tr>
-                <?php endwhile; ?>
-                <?php endif; ?>
             </tbody>
         </table>
     </div>
