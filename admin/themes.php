@@ -12,9 +12,8 @@ if (!empty($_POST)) {
     header('Location: themes.php');
     exit;
 }
+include 'header.php';
 ?>
-
-<?=template_admin_header('Themes')?>
 
 <h2>Themes</h2>
 

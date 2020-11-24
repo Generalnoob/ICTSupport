@@ -49,9 +49,8 @@ if (isset($_GET['id'])) {
         exit;
     }
 }
+include 'header.php';
 ?>
-
-<?=template_admin_header($page . ' Account')?>
 
 <h2><?=$page?> Account</h2>
 

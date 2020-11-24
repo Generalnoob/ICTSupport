@@ -6,9 +6,8 @@ if (isset($_POST['emailtemplate'])) {
 }
 // Read the activation email template HTML file
 $contents = file_get_contents('../activation-email-template.html');
+include 'header.php';
 ?>
-
-<?=template_admin_header('Email Template')?>
 
 <h2>Email Template</h2>
 

@@ -12,9 +12,8 @@ if (!empty($_POST)) {
     header('Location: settings.php');
     exit;
 }
+include 'header.php';
 ?>
-
-<?=template_admin_header('Settings')?>
 
 <h2>Settings</h2>
 

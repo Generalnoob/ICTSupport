@@ -59,9 +59,8 @@ if (isset($_GET['id'])) {
         exit;
     }
 }
+include 'header.php';
 ?>
-
-<?=template_admin_header($page . ' Device')?>
 
 <h2><?=$page?> Device</h2>
 

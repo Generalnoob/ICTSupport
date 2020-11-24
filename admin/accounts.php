@@ -8,10 +8,8 @@ $stmt = $con->prepare('SELECT id, username, password, email, activation_code, ro
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($id, $username, $password, $email, $activation_code, $role);
+include 'header.php';
 ?>
-
-<?=template_admin_header('Accounts')?>
-
 
 <h2>Accounts</h2>
 

@@ -5,9 +5,8 @@ $stmt = $con->prepare('SELECT id, device_type, department, device_id, motherboar
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($id, $device_type, $department, $device_id, $motherboard, $ram, $processor, $gpu, $sound_card, $wifi, $bluetooth, $simcard, $make, $model, $camera, $device_os);
+include 'header.php';
 ?>
-
-<?=template_admin_header('Devices')?>
 
 <h2>Devices</h2>
 
