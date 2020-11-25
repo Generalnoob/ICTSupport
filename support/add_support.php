@@ -15,18 +15,18 @@ $date = new DateTime();
 
 if (isset($_GET['id'])) {
     // Get the account from the database
-    $stmt = $con->prepare('SELECT id, device_id, user_id, status, problem, solution, date FROM support WHERE id = ?');
+    $stmt = $con->prepare('SELECT id, device_id, user_id, status, problem, solution, date, title FROM support WHERE id = ?');
     $stmt->bind_param('i', $_GET['id']);
     $stmt->execute();
-    $stmt->bind_result($support['id'], $support['device_id'], $support['user_id'], $support['status'], $support['problem'], $support['solution'], $support['date']);
+    $stmt->bind_result($support['id'], $support['device_id'], $support['user_id'], $support['status'], $support['problem'], $support['solution'], $support['date'], $support['title']);
     $stmt->fetch();
     $stmt->close();
     // ID param exists, edit an existing device
     $page = 'Edit';
     if (isset($_POST['submit'])) {
         // Update the device
-        $stmt = $con->prepare('UPDATE support SET device_id = ?, user_id = ?, status = ?, problem = ?, solution = ?, date = ? WHERE id = ?');
-        $stmt->bind_param('ssssssi', $_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['solution'], $_POST['date'], $_GET['id']);
+        $stmt = $con->prepare('UPDATE support SET device_id = ?, user_id = ?, status = ?, problem = ?, solution = ?, date = ?, title = ? WHERE id = ?');
+        $stmt->bind_param('sssssssi', $_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['solution'], $_POST['date'], $_POST['title'], $_GET['id']);
         $stmt->execute();
         header('Location: index.php');
 		exit;
@@ -45,8 +45,8 @@ if (isset($_GET['id'])) {
     // Create a new account
     $page = 'Create';
     if (isset($_POST['submit'])) {
-       $stmt = $con->prepare('INSERT IGNORE INTO support (device_id, user_id, status, problem, date) VALUES (?,?,?,?,?)');
-        $stmt->bind_param('sssss', $_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['date']);
+       $stmt = $con->prepare('INSERT IGNORE INTO support (device_id, user_id, status, problem, date, title) VALUES (?,?,?,?,?,?)');
+        $stmt->bind_param('ssssss', $_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['date'], $_POST['title']);
         $stmt->execute();
         header('Location: index.php');
         exit;
@@ -72,6 +72,8 @@ include '../template/'.Site_Theme.'/header.php'; ?>
 		<input type="hidden" id="response" name="response" value="3" required>
 		<label for="username"><?php echo $lang_Device_ID; ?></label>
         <input type="text" id="device_id" name="device_id" placeholder="e.g. 002" value="<?=$support['device_id']?>" required>
+		<label for="username"><?php echo $lang_Device_Title; ?></label>
+        <input type="text" id="title" name="title" placeholder="Please be short but descriptive" value="" required>
 		<label for="username"><?php echo $lang_Issue; ?></label>
         <textarea id="problem" name="problem" placeholder="<?php echo $lang_Detailed_As_Possible; ?>" required><?=$support['problem']?></textarea>
 		

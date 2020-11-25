@@ -38,11 +38,17 @@ body {background-color: #435165;margin: 0;}
 
 .response_red{color:#720103;}
 
+.response_grey{color:#6B6B6B;}
+
 .response_green{color:#0A6000;}
 
 .response_small{float:left;display:block;padding-right:5px;}
 
 .response_large{float:left;display:block;}
+
+.red{color: #720103;}
+
+.green{color:#0A6000;}
 
 * {box-sizing: border-box;font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;font-size: 16px;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
 

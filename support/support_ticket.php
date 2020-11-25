@@ -107,7 +107,7 @@ include '../template/'.Site_Theme.'/header.php'; ?>
 				<form action="" method="post" class="form responsive-width-100">
         <input type="hidden" id="user_id" name="user_id" value="<?=$_SESSION['id']?>" required>
 		<input type="hidden" id="ticket_id" name="ticket_id" value="<?php echo $_GET['id']; ?>" required>
-		<input type="hidden" id="date" name="date" value="<?php if (isset ($support['date'])){ echo $support['date']; } else { echo $date->format('d-m-Y H:i:s'); } ?>" required>
+		<input type="hidden" id="date" name="date" value="<?php echo date("Y-m-d H:i:s"); ?>" required>
 		<input type="hidden" id="status" name="status" value="2" required>
 					<?php if ($_SESSION['role'] == 'Admin' OR 'ICT Support'): ?>
 		<input type="hidden" id="response_read" name="response_read" value="2" required>

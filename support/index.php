@@ -13,10 +13,10 @@ if (isset($_GET["pa"])) { $pa  = $_GET["pa"]; } else { $pa=1; };
 $start_froms = ($ps-1) * $limit;
 $start_froma = ($pa-1) * $limit;
 //Call Tickets
-$stmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE user_id = '.$_SESSION['id'].' ORDER BY date DESC LIMIT '.$start_froms.', '.$limit.'');
+$stmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date, title FROM support WHERE user_id = '.$_SESSION['id'].' ORDER BY date DESC LIMIT '.$start_froms.', '.$limit.'');
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+$stmt->bind_result($id, $device_id, $user_id, $status, $problem, $date, $title);
 ?>
 <?php 
 //Page Name
@@ -41,7 +41,7 @@ include '../template/'.Site_Theme.'/header.php'; ?>
                     <td>#</td>
                     <td><div class="response_small"><i class="fas fa-address-card" title="<?php echo $lang_Device_ID; ?>"></i></div> <div class="response_large"><?php echo $lang_Device_ID; ?></div></td>
 					<td><div class="response_small"><i class="fas fa-user-cog" title="<?php echo $lang_Issue; ?>"></i> </div><div class="response_large"><?php echo $lang_Issue; ?></div></td>
-                    <td><div class="response_small"><i class="fas fa-battery-half" title="<?php echo $lang_Status; ?>"></i> </div><div class="response_large"><?php echo $lang_Status; ?></div></td>
+                    <td><div class="response_small"><i class="fas fa-unlock" title="<?php echo $lang_Status; ?>"></i> </div><div class="response_large"><?php echo $lang_Status; ?></div></td>
 					<td><div class="response_small"><i class="fas fa-calendar-week" title="<?php echo $lang_Date; ?>"></i> </div><div class="response_large"><?php echo $lang_Date; ?></div></td>
 					<td><div class="response_small"><i class="fas fa-comments" title="<?php echo $lang_Response; ?>"></i></div><div class="response_large"><?php echo $lang_Response; ?></div></td>
                 </tr>
@@ -58,20 +58,30 @@ include '../template/'.Site_Theme.'/header.php'; ?>
                 <tr class="details" onclick="location.href='support_ticket.php?id=<?=$id?>'">
 					<td></td>
 					<td><?=$device_id?></td>
-                    <td class="problem"><?php echo substr($problem,0,70); ?>... </td>
-                    <td><?php if ($status == 1){echo $lang_Closed;}else{echo $lang_Open;}; ?></td>
-                    <td><?=$date?></td>
+                    <td class="problem"><?php echo substr($title, 0, 50); echo strlen($title) > 50 ? '...' : ''; ?></td>
+                    <td><?php if ($status == 1){echo '<div class="response_small"><i class="red fas fa-lock"></i></div><div class="response_large">'.$lang_Closed.'</div>';}else{echo '<div class="response_small"><i class="green fas fa-unlock"></i></div><div class="response_large">'.$lang_Open.'</div>';}; ?></td>
+                    <td><?php echo time_elapsed_string($date, true); ?></td>
 					<?php //Check for responses and display who responded	
 				$response_limit = '1';
 				$restmt = $con->prepare('SELECT response_read FROM support_chat WHERE ticket_id = '.$id.' ORDER BY id DESC LIMIT '.$response_limit.'');
 				$restmt->execute();
 				$restmt->store_result();
-				$restmt->bind_result($reesponse_read);?>
-					<?php while ($restmt->fetch()): ?>
+				$restmt->bind_result($reesponse_read);
+				
+				$restmt1 = $con->prepare('SELECT response_read FROM support_chat WHERE ticket_id = '.$id.' ORDER BY id DESC LIMIT '.$response_limit.'');
+				$restmt1->execute();
+				$restmt1->store_result();
+				$restmt1->bind_result($reesponse_read1);
+					
+					if ($restmt1->fetch() <= 0){ ?>
+						 <td><div class="response_small"><i class="response_grey fas fa-comments" title="'.$lang_No_Response.'"></i></div><div class="response_large"> <?php echo $lang_No_Response;?></div></td>
+					
+					<?php } else { while ($restmt->fetch()){ ?>
 					<td><div class="response_small">
-						<?php if ($reesponse_read == '2'){echo '<i class="response_red fas fa-comments" title="'.$lang_Admin_Responded.'"></i>';} else {if ($reesponse_read == '1'){echo '<i class="response_green fas fa-comments" title="'.$lang_User_Responded.'"></i>';} else {echo '<i class="response_grey fas fa-comments" title="No Response"></i>';}}?></div><div class="response_large"><?php if ($reesponse_read == '2'){echo $lang_Admin_Responded;} else {if ($reesponse_read == '1'){echo $lang_User_Responded;} else {echo 'No Response';}}?></div>
+						<?php if ($reesponse_read == '2'){echo '<i class="response_red fas fa-comments" title="'.$lang_Admin_Responded.'"></i>';} else {if ($reesponse_read == '1'){echo '<i class="response_green fas fa-comments" title="'.$lang_User_Responded.'"></i>';} else {echo '<i class="response_grey fas fa-comments" title="No Response"></i>';}}?></div><div class="response_large"><?php if ($reesponse_read == '2'){echo $lang_Admin_Responded;} else {if ($reesponse_read == '1'){echo $lang_User_Responded;}}?></div>
 					</td>
-					<?php endwhile; ?>
+					<?php } }?>
+					
 				</tr>
                 <?php endwhile;?>
                 <?php endif;?>
@@ -95,17 +105,17 @@ echo $pagLinks . '</div>'; ?>
 			<div class="block">
 			<p><?php echo $lang_Support_Tickets; ?>
 		<?php 	$astatus = '2';
-				$astmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = '.$astatus.' ORDER BY date ASC LIMIT '.$start_froma.', '.$limit.'');
+				$astmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date, title FROM support WHERE status = '.$astatus.' ORDER BY date ASC LIMIT '.$start_froma.', '.$limit.'');
 				$astmt->execute();
 				$astmt->store_result();
-				$astmt->bind_result($aid, $adevice_id, $auser_id, $astatus, $aproblem, $adate);?>
+				$astmt->bind_result($aid, $adevice_id, $auser_id, $astatus, $aproblem, $adate, $atitle);?>
 				<table>
             <thead>
                 <tr class="head_banners">
                     <td>#</td>
 					<td><div class="response_small"><i class="fas fa-address-card" title="<?php echo $lang_Device_ID; ?>"></i></div> <div class="response_large"><?php echo $lang_Device_ID; ?></div></td>
 					<td><div class="response_small"><i class="fas fa-user-cog" title="<?php echo $lang_Issue; ?>"></i> </div><div class="response_large"><?php echo $lang_Issue; ?></div></td>
-                    <td><div class="response_small"><i class="fas fa-battery-half" title="<?php echo $lang_Status; ?>"></i> </div><div class="response_large"><?php echo $lang_Status; ?></div></td>
+                    <td><div class="response_small"><i class="fas fa-unlock" title="<?php echo $lang_Status; ?>"></i> </div><div class="response_large"><?php echo $lang_Status; ?></div></td>
 					<td><div class="response_small"><i class="fas fa-calendar-week" title="<?php echo $lang_Date; ?>"></i> </div><div class="response_large"><?php echo $lang_Date; ?></div></td>
 					<td><div class="response_small"><i class="fas fa-comments" title="<?php echo $lang_Response; ?>"></i></div><div class="response_large"><?php echo $lang_Response; ?></div></td>
                 </tr>
@@ -120,20 +130,28 @@ echo $pagLinks . '</div>'; ?>
                 <tr class="details" onclick="location.href='support_ticket.php?id=<?=$aid?>'">
 					<td></td>
 					<td><?=$adevice_id?></td>
-                    <td class="problem"><?php echo substr($aproblem,0,70); ?>... </td>
-                    <td><?php if ($astatus == 1){echo $lang_Closed;}else{echo $lang_Open;}; ?></td>
-                    <td><?=$adate?></td>
+                    <td class="problem"><?php echo substr($atitle, 0, 50); echo strlen($atitle) > 50 ? '...' : ''; ?></td>
+                    <td><?php if ($astatus == 1){echo '<div class="response_small"><i class="red fas fa-lock"></i></div><div class="response_large">'.$lang_Closed.'</div>';}else{echo '<div class="response_small"><i class="green fas fa-unlock"></i></div><div class="response_large">'.$lang_Open.'</div>';}; ?></td>
+                    <td><?php echo time_elapsed_string($adate, true); ?></td>
 					<?php 	
 				$response_limit = '1';
 				$rstmt = $con->prepare('SELECT response_read FROM support_chat WHERE ticket_id = '.$aid.' ORDER BY id DESC LIMIT '.$response_limit.'');
 				$rstmt->execute();
 				$rstmt->store_result();
-				$rstmt->bind_result($response_read);?>
-				<?php while ($rstmt->fetch()): ?>
+				$rstmt->bind_result($response_read);
+				$restmt2 = $con->prepare('SELECT response_read FROM support_chat WHERE ticket_id = '.$aid.' ORDER BY id DESC LIMIT '.$response_limit.'');
+				$restmt2->execute();
+				$restmt2->store_result();
+				$restmt2->bind_result($reesponse_read2);
+					
+					if ($restmt2->fetch() <= 0){ ?>
+						 <td><div class="response_small"><i class="response_grey fas fa-comments" title="'.$lang_No_Response.'"></i></div><div class="response_large"> <?php echo $lang_No_Response;?></div></td>
+					
+					<?php } else { while ($rstmt->fetch()){ ?>
 					<td><div class="response_small">
-						<?php if ($response_read == '2'){echo '<i class="response_red fas fa-comments" title="'.$lang_Admin_Responded.'"></i>';} else {if ($response_read == '1'){echo '<i class="response_green fas fa-comments" title="'.$lang_User_Responded.'"></i>';} else {echo '<i class="response_grey fas fa-comments" title="No Response"></i>';}}?></div><div class="response_large"><?php if ($response_read == '2'){echo $lang_Admin_Responded;} else {if ($response_read == '1'){echo $lang_User_Responded;} else {echo 'No Response';}}?></div>
+						<?php if ($reesponse_read == '2'){echo '<i class="response_red fas fa-comments" title="'.$lang_Admin_Responded.'"></i>';} else {if ($reesponse_read == '1'){echo '<i class="response_green fas fa-comments" title="'.$lang_User_Responded.'"></i>';} else {echo '<i class="response_grey fas fa-comments" title="No Response"></i>';}}?></div><div class="response_large"><?php if ($reesponse_read == '2'){echo $lang_Admin_Responded;} else {if ($reesponse_read == '1'){echo $lang_User_Responded;}}?></div>
 					</td>
-					<?php endwhile; ?>
+					<?php } }?>
 				</tr>
                 <?php endwhile; ?>
 					
