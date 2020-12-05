@@ -1,58 +1,23 @@
 <?php
 include 'main.php';
-// query to get all accounts from the database
-$stmt = $con->prepare('SELECT id, username, password, email, activation_code, role FROM accounts ORDER BY id DESC LIMIT 5');
-$stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($id, $username, $password, $email, $activation_code, $role);
-// query to get all devices from the database
-$dtmt = $con->prepare('SELECT id, device_type, department, device_id, make, model FROM devices ORDER BY id DESC LIMIT 5');
-$dtmt->execute();
-$dtmt->store_result();
-$dtmt->bind_result($id, $device_type, $department, $device_id, $make, $model);
-// query to get all support tickets from the database
-$xtmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 ORDER BY date DESC');
-$xtmt->execute();
-$xtmt->store_result();
-$xtmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
-
-$ctmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 1 AND date >= DATE_SUB(now(),INTERVAL 1 WEEK) ');
-$ctmt->execute();
-$ctmt->store_result();
-$ctmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
-
-$otmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 AND date >= DATE_SUB(now(),INTERVAL 1 WEEK) ');
-$otmt->execute();
-$otmt->store_result();
-$otmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
-
-$c1tmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 1 AND date >= DATE_SUB(now(),INTERVAL 1 MONTH) ');
-$c1tmt->execute();
-$c1tmt->store_result();
-$c1tmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
-
-$o1tmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 AND date >= DATE_SUB(now(),INTERVAL 1 MONTH) ');
-$o1tmt->execute();
-$o1tmt->store_result();
-$o1tmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
 include 'header.php';
 ?>
 
 <h2>Home</h2>
-
-<div class="content-block">
+<div class="maincont">
+<div class="content-block-short">
 	<script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Task', 'Weekly Tickets'],
+          ['Task', 'This Weeks Tickets'],
           ['Open Tickets',     <?php echo $otmt->num_rows;?>],
           ['Closed Tickets',      <?php echo $ctmt->num_rows;?>],
         ]);
 
         var options = {
-          title: 'Weekly Tickets',
+          title: 'This Weeks Tickets',
           pieHole: 0.4,
         };
 
@@ -61,19 +26,19 @@ include 'header.php';
       }
     </script>
 <div id="donutchart1" style="width: 500px; height: 500px;float:left;display:block;"></div>
-	
+</div><div class="content-block-short">
 	<script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Task', 'Weekly Tickets'],
+          ['Task', 'This Months Tickets'],
           ['Open Tickets',     <?php echo $o1tmt->num_rows;?>],
           ['Closed Tickets',      <?php echo $c1tmt->num_rows;?>],
         ]);
 
         var options = {
-          title: 'Monthly Tickets',
+          title: 'This Months Tickets',
           pieHole: 0.4,
         };
 
@@ -82,21 +47,51 @@ include 'header.php';
       }
     </script>
 <div id="donutchart2" style="width: 500px; height: 500px;float:left;display:block;"></div>
+</div><div class="content-block-short">
+	<div id="chart_div" style="width: 500px; height: 500px;"></div>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+        ['Month',	'Tickets'],
+        <?php while ($ytmt->fetch()){
+	$daterounded = strtotime( $date );
+	$datea = date( 'M', $daterounded );
+	$dateb = date( 'm', $daterounded );
+	// Get number of tickets from year
+$dates = $con->prepare('SELECT id FROM support WHERE MONTH(date)='.$dateb.'');
+$dates->execute();
+$dates->store_result();
+$dates->bind_result($id);
+    echo "['".$datea."',".$dates->num_rows."],";
+} ?>
+    ]);
 
+        var options = {
+            title: 'Tickets this year',
+            curveType: 'function',
+            legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+</script>
 </div>
 
-<div class="content-block">
+<div class="content-block-short">
     <div class="table_users">
 		<div class="title">Latest Accounts</div>
 		<div class="sub_title">Total Users: <?php echo $stmt->num_rows; ?></div>
-        <table  cellspacing="0">
+        <table  cellspacing="0" style="width:500px;">
             <thead>
                 <tr>
                     <td>#</td>
                     <td>Username</td>
-                    <td class="responsive-hidden">Email</td>
-                    <td class="responsive-hidden">Activation Code</td>
-                    <td class="responsive-hidden">Role</td>
+                    <td>Email</td>
+                    <td>Role</td>
                 </tr>
             </thead>
             <tbody>
@@ -109,27 +104,27 @@ include 'header.php';
                 <tr class="details" onclick="location.href='account.php?id=<?=$id?>'">
                     <td></td>
                     <td><?=$username?></td>                 
-                    <td class="responsive-hidden"><?=$email?></td>
-                    <td class="responsive-hidden"><?=$activation_code?></td>
-                    <td class="responsive-hidden"><?=$role?></td>
+                    <td><?=$email?></td>
+                    <td><?=$role?></td>
                 </tr>
                 <?php endwhile; ?>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
+	</div><div class="content-block-short">
 	<div class="table_devices">
 		<div class="title">Latest Devices</div>
 		<div class="sub_title">Total Devices: <?php  echo $dtmt->num_rows; ?></div>
-        <table  cellspacing="0">
+        <table  cellspacing="0" style="width:500px;">
             <thead>
                 <tr>
                     <td>#</td>
                     <td>Device ID</td>
-                    <td class="responsive-hidden">Device Type</td>
-                    <td class="responsive-hidden">Department</td>
-                    <td class="responsive-hidden">Make</td>
-					<td class="responsive-hidden">Model</td>
+                    <td>Device Type</td>
+                    <td>Department</td>
+                    <td>Make</td>
+					<td>Model</td>
                 </tr>
             </thead>
             <tbody>
@@ -142,10 +137,10 @@ include 'header.php';
                 <tr class="details" onclick="location.href='add_device.php?id=<?=$id?>'">
                     <td></td>
                     <td><?=$device_id?></td>                 
-                    <td class="responsive-hidden"><?=$device_type?></td>
-                    <td class="responsive-hidden"><?=$department?></td>
-                    <td class="responsive-hidden"><?=$make?></td>
-					<td class="responsive-hidden"><?=$model?></td>
+                    <td><?=$device_type?></td>
+                    <td><?=$department?></td>
+                    <td><?=$make?></td>
+					<td><?=$model?></td>
                 </tr>
                 <?php endwhile; ?>
                 <?php endif; ?>
@@ -154,7 +149,7 @@ include 'header.php';
     </div>
             </tbody>
         </table>
-    </div>
+</div></div>
 </div>
 
 <?=template_admin_footer()?>

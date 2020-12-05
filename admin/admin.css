@@ -68,6 +68,8 @@ header .responsive-toggle {
   display: none;
 }
 
+.grey {color:#A8A8A8;}
+
 aside {
   position: fixed;
   z-index: 999999;
@@ -110,6 +112,13 @@ main h2 {
   padding-bottom: 20px;
   border-bottom: 1px solid #dbdbdd;
 }
+.content-block-device{overflow: hidden;padding:10px;}
+.device-tab{display:block;float:left; overflow:hidden;padding:5px;margin:10px;text-decoration: none;}
+.device-tab a{text-decoration: none; color: #555555;}
+.device-tab a:visited{text-decoration: none; color: #555555;}
+.device-type i{font-size:50px;margin:auto;text-align: center;}
+.device-type{margin:auto;display:block;width:50px;text-align:center;}
+.device-extra{display:block;float:right;padding:5px;}
 .details:nth-child(odd) {
     background-color: aliceblue;
 }
@@ -118,7 +127,11 @@ main .content-block {
   background-color: #fff;
   margin-top: 25px;
   padding: 15px;overflow:hidden;
+	width:100%;
 }
+
+main .content-block-short {background-color: #fff;margin: 25px 25px 0 0;padding: 15px;overflow:hidden;display:block;float:left;}
+main .maincont {overflow: hidden;}
 
 main .table_users{float:left;display:block;overflow:none;padding: 10px;}
 main .table_devices{float:left;display:block;overflow:none;padding: 10px;margin-left:10px;}
@@ -266,6 +279,8 @@ main .form .submit-btns .delete {
 main .form .submit-btns .delete:hover {
   background-color: #9d2626;
 }
+
+main .footer {text-align: center;}
 
 main .links {
   display: flex;

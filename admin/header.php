@@ -5,14 +5,14 @@
 		<meta name="viewport" content="width=device-width,minimum-scale=1">
 		<title>Admin Home</title>
 		<link href="admin.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+		<script src="https://kit.fontawesome.com/ae1a122eb7.js" crossorigin="anonymous"></script>
 	</head>
 	<body class="admin">
         <header>
             <h1>Admin Panel</h1>
             <a class="responsive-toggle" href="#">
                 <i class="fas fa-bars"></i>
-            </a>
+			</a>
 			<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         </header>
         <aside class="responsive-width-100 responsive-hidden">

@@ -19,8 +19,8 @@ $device = array(
 	'camera' => '',
 	'device_os' => ''
 );
-$devices_type = array('Tower PC', 'Mini PC', 'Tablet', 'Phone');
-$devices_os = array('Windows 10', 'Windows 8', 'Windows 7', 'Windows vista', 'Windows XP', 'Linux', 'Chrome OS', 'Ubuntu', 'Mac OS', 'Debian', 'Apple iOS', 'Android');
+$devices_type = array('Tower PC', 'Mini PC', 'Laptop', 'Tablet', 'Phone');
+$devices_os = array('Windows 10', 'Windows 8', 'Windows 7', 'Windows vista', 'Windows XP', 'Linux', 'Suse', 'Redhat', 'Fedora', 'Centos', 'Ubuntu', 'Chrome OS', 'Mac OS', 'Apple iOS', 'Android');
 if (isset($_GET['id'])) {
     // Get the account from the database
     $stmt = $con->prepare('SELECT id, device_type, department, device_id, motherboard, ram, processor, gpu, sound_card, wifi, bluetooth, simcard, make, model, camera, os FROM devices WHERE id = ?');

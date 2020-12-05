@@ -15,6 +15,49 @@ $stmt->close();
 if ($role != 'Admin') {
     exit('You do not have permission to access this page!');
 }
+
+// query to get all accounts from the database
+$stmt = $con->prepare('SELECT id, username, password, email, activation_code, role FROM accounts ORDER BY id DESC LIMIT 5');
+$stmt->execute();
+$stmt->store_result();
+$stmt->bind_result($id, $username, $password, $email, $activation_code, $role);
+// query to get all devices from the database
+$dtmt = $con->prepare('SELECT id, device_type, department, device_id, make, model FROM devices ORDER BY id DESC LIMIT 5');
+$dtmt->execute();
+$dtmt->store_result();
+$dtmt->bind_result($id, $device_type, $department, $device_id, $make, $model);
+// query to get all support tickets from the database
+$xtmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 ORDER BY date DESC');
+$xtmt->execute();
+$xtmt->store_result();
+$xtmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+// monthly tickets closed
+$ctmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 1 AND date >= DATE_SUB(now(),INTERVAL 1 WEEK) ');
+$ctmt->execute();
+$ctmt->store_result();
+$ctmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+// Weekly Tickets open
+$otmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 AND date >= DATE_SUB(now(),INTERVAL 1 WEEK) ');
+$otmt->execute();
+$otmt->store_result();
+$otmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+// monthly tickets closed
+$c1tmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 1 AND date >= DATE_SUB(now(),INTERVAL 1 MONTH) ');
+$c1tmt->execute();
+$c1tmt->store_result();
+$c1tmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+// monthly tickets open
+$o1tmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 AND date >= DATE_SUB(now(),INTERVAL 1 MONTH) ');
+$o1tmt->execute();
+$o1tmt->store_result();
+$o1tmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+
+// yearly tickets
+$ytmt = $con->prepare('SELECT id, date FROM support WHERE date >= DATE_SUB(now(),INTERVAL 1 YEAR) GROUP BY MONTH(date)');
+$ytmt->execute();
+$ytmt->store_result();
+$ytmt->bind_result($id, $date);
+
 // Template admin footer
 function template_admin_footer() {
 echo <<<EOT

@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width,minimum-scale=1">
 		<title><?php echo $lang_Home_Page; ?></title>
 		<link href="<?= URL_Site.'template/'.Site_Theme.'/';?>style.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+		<script src="https://kit.fontawesome.com/ae1a122eb7.js" crossorigin="anonymous"></script>
 		<script>
 		//Say Hi to the returning user
 			function hideLoadingDiv() {
