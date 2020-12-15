@@ -1,8 +1,8 @@
 <?php
 include 'main.php';
-check_loggedin($con);
-languages($con);
-include 'languages/'.languages($con).'.php';
+check_loggedin($pdo);
+languages($pdo);
+include 'languages/'.languages($pdo).'.php';
 include 'template/'.Site_Theme.'/header.php'; 
 ?>
 		<div class="content">

@@ -1,9 +1,9 @@
 <?php
 include '../main.php';
-check_loggedin($con);
+check_loggedin($pdo);
 //Call Language File
-languages($con);
-include '../languages/'.languages($con).'.php';
+languages($pdo);
+include '../languages/'.languages($pdo).'.php';
 // Default input product values
 $support = array(
 	'device_id' => '',
@@ -14,24 +14,18 @@ $date = new DateTime();
 $page = 'Update';
 if (isset($_GET['id'])) {
     // Get the device from the database
-    $stmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE id = ?');
-    $stmt->bind_param('i', $_GET['id']);
-    $stmt->execute();
-    $stmt->bind_result($support['id'], $support['device_id'], $support['user_id'], $support['status'], $support['problem'], $support['date']);
-    $stmt->fetch();
-    $stmt->close();
+    $stmt = $pdo->prepare('SELECT * FROM support WHERE id = ?');
+    $stmt->execute([ $_GET['id'] ]);
+    $support = $stmt->fetch(PDO::FETCH_ASSOC);
+	
 	// Get the account from the database
-    $atmt = $con->prepare('SELECT username FROM accounts WHERE id = ?');
-    $atmt->bind_param('i', $support['user_id']);
-    $atmt->execute();
-    $atmt->bind_result($account['username']);
-    $atmt->fetch();
-    $atmt->close();
+	$atmt = $pdo->prepare('SELECT username FROM accounts WHERE id = ?');
+    $atmt->execute([ $support['user_id'] ]);
+    $account = $atmt->fetch(PDO::FETCH_ASSOC);
        // Update the device
         if (isset($_POST['submit'])) {
-        $stmt = $con->prepare('INSERT IGNORE INTO support_chat (ticket_id, response, user_id, date, response_read) VALUES (?,?,?,?,?)');
-        $stmt->bind_param('sssss', $_POST['ticket_id'], $_POST['response'], $_POST['user_id'], $_POST['date'], $_POST['response_read']);
-        $stmt->execute();
+        $stmt = $pdo->prepare('INSERT IGNORE INTO support_chat (ticket_id, response, user_id, date, response_read) VALUES (?,?,?,?,?)');
+        $stmt->execute([ $_POST['ticket_id'], $_POST['response'], $_POST['user_id'], $_POST['date'], $_POST['response_read'] ]);
         header('Location: support_ticket.php?id='.$_POST['ticket_id']);
         exit;
 		 
@@ -39,9 +33,8 @@ if (isset($_GET['id'])) {
     if (isset($_POST['close'])) {
         // Close the Ticket
 		$closed = '1';
-        $stmt = $con->prepare('UPDATE support SET status = ? WHERE id = ?');
-        $stmt->bind_param('si', $closed, $_GET['id']);
-        $stmt->execute();
+        $stmt = $pdo->prepare('UPDATE support SET status = ? WHERE id = ?');
+        $stmt->execute([ $closed, $_GET['id'] ]);
         header('Location: index.php');
         exit;
     }
@@ -58,14 +51,11 @@ include '../template/'.Site_Theme.'/header.php'; ?>
 		</div></div>
 			<div class="block">
 			<h2><?php echo $lang_Update_Support_Ticket; ?></h2>
-				<?php echo '<br>'.$lang_Device_ID.': '.$support['device_id'].' '.$lang_Support_Ticket_By.' '.$account['username'].'</br>'; echo ''.$lang_Issue.':</br > '.$support['problem'].'</br>';
+				<?php echo '<br>'.$lang_Device_ID_Edit.': '.$support['device_id'].' '.$lang_Support_Ticket_By.' '.$account['username'].'</br>'; echo ''.$lang_Issue.':</br > '.$support['problem'].'</br>';
 				// Get the system specs from the database
-    $dtmt = $con->prepare('SELECT id, device_type, department, device_id, motherboard, ram, processor, gpu, sound_card, wifi, bluetooth, simcard, make, model, camera, os FROM devices WHERE device_id = ?');
-    $dtmt->bind_param('i', $support['device_id']);
+    $dtmt = $pdo->prepare('SELECT * FROM devices WHERE device_id = '.$support['device_id'].'');
     $dtmt->execute();
-    $dtmt->bind_result($device['id'], $device['device_type'], $device['department'], $device['device_id'], $device['motherboard'], $device['ram'], $device['processor'], $device['gpu'], $device['sound_card'], $device['wifi'], $device['bluetooth'], $device['simcard'], $device['make'], $device['model'], $device['camera'], $device['os']);
-    $dtmt->fetch();
-    $dtmt->close();
+    $device = $dtmt->fetch(PDO::FETCH_ASSOC);
 				if ($device['wifi'] == '1'){$wifi = 'Yes';} else {$wifi = 'No';}
 				if ($device['bluetooth'] == '1'){$bluetooth = 'Yes';} else {$bluetooth = 'No';}
 				if ($device['camera'] == '1'){$camera = 'Yes';} else {$camera = 'No';}
@@ -75,34 +65,29 @@ include '../template/'.Site_Theme.'/header.php'; ?>
 				?>
 	
 		<?php // Get the account from the database
-    			$ctmt = $con->prepare('SELECT id, ticket_id, response, user_id, date FROM support_chat WHERE ticket_id = '.$_GET['id'].'');
+    			$ctmt = $pdo->prepare('SELECT * FROM support_chat WHERE ticket_id = '.$_GET['id'].'');
 				$ctmt->execute();
-				$ctmt->store_result();
-				$ctmt->bind_result($id, $ticket_id, $response, $user_id, $date);	
+    			$chat = $ctmt->rowCount();
+				
 		?>
-		<table>
-           <tbody>
-                <?php if ($ctmt->num_rows == 0): ?>
-                <tr>
-                    <td colspan="4" style="text-align:center;">There are no responses</td>
-                </tr>
-                <?php else: ?>
-                <?php while ($ctmt->fetch()): 
-			   	$uctmt = $con->prepare('SELECT username FROM accounts WHERE id = ?');
-    			$uctmt->bind_param('i', $user_id);
-    			$uctmt->execute();
-    			$uctmt->bind_result($username['username']);
-    			$uctmt->fetch();
-    			$uctmt->close(); ?>
-					<td>
-					<div class="username"><?php echo $lang_Username; ?> <?=$username['username']?></div>
-					<div class="response"><?=$response?></div>
-					</td>
-				</tr>
-                <?php endwhile; ?>
+                <?php if ($chat == 0): ?>
+                  <div class="no_reply">There are no responses</div>
+                <?php else: 
+			  
+                 while ($chats = $ctmt->fetch(PDO::FETCH_ASSOC)){ 
+
+			   	$uctmt = $pdo->prepare('SELECT username FROM accounts WHERE id = '.$chats['user_id'].'');
+				$uctmt->execute();
+				$uctmts = $uctmt->fetch(PDO::FETCH_ASSOC);
+    			 ?>
+					<div class="reply">
+						<div class="reply_inner">
+					<div class="username"><?php echo $lang_Username; ?> <?=$uctmts['username']?></div>
+					<div class="user_response"><?=$chats['response']?></div>
+							</div>
+					</div>
+                <?php } ?>
                 <?php endif; ?>
-            </tbody>
-		</table>
 				
 				<form action="" method="post" class="form responsive-width-100">
         <input type="hidden" id="user_id" name="user_id" value="<?=$_SESSION['id']?>" required>

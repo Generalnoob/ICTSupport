@@ -1,34 +1,27 @@
 <?php
 include 'main.php';
-// No need for the user to see the login form if they're logged-in so redirect them to the home page
+// If the user is logged-in redirect them to the home page
 if (isset($_SESSION['loggedin'])) {
-	// If the user is not logged in redirect to the home page.
-	header('Location: home.php');
-	exit;
+    header('Location: home.php');
+    exit;
 }
-// Also check if they are "remembered"
+// Also check if the user is remembered, if so redirect them to the home page
 if (isset($_COOKIE['rememberme']) && !empty($_COOKIE['rememberme'])) {
-	// If the remember me cookie matches one in the database then we can update the session variables.
-	$stmt = $con->prepare('SELECT id, username, role FROM accounts WHERE rememberme = ?');
-	$stmt->bind_param('s', $_COOKIE['rememberme']);
-	$stmt->execute();
-	$stmt->store_result();
-	if ($stmt->num_rows > 0) {
-		// Found a match
-		$stmt->bind_result($id, $username, $role);
-		$stmt->fetch();
-		$stmt->close();
+	// If the remember me cookie matches one in the database then we can update the session variables and the user will be logged-in.
+	$stmt = $pdo->prepare('SELECT * FROM accounts WHERE rememberme = ?');
+	$stmt->execute([ $_COOKIE['rememberme'] ]);
+	$account = $stmt->fetch(PDO::FETCH_ASSOC);
+	if ($account) {
+		// Found a match, user is "remembered" log them in automatically
 		session_regenerate_id();
 		$_SESSION['loggedin'] = TRUE;
-		$_SESSION['name'] = $username;
-		$_SESSION['id'] = $id;
-		$_SESSION['role'] = $role;
-		header('Location: home.php');
+		$_SESSION['name'] = $account['username'];
+		$_SESSION['id'] = $account['id'];
+        $_SESSION['role'] = $account['role'];
+        header('Location: home.php');
 		exit;
 	}
 }
-languages($con);
-include 'languages/'.languages($con).'.php'; 
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,19 +29,18 @@ include 'languages/'.languages($con).'.php';
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,minimum-scale=1">
 		<title>Login</title>
-		<link href="template/<?=Site_Theme?>/style.css" rel="stylesheet" type="text/css">
+		<link href="<?= URL_Site.'template/'.Site_Theme.'/';?>style.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 	</head>
-	<body>
+	<body class="dark-theme">
 		<div class="login">
 			<div class="logo_login">
 				<div class="logo_login_inner">
 			<?php Add_Logo(); ?>
-					</div>
-				</div>
+				</div></div>
 			<div class="links">
 				<a href="index.php" class="active">Login</a>
-				<a href="register.html">Register</a>
+				<a href="reg.php">Register</a>
 			</div>
 			<form action="authenticate.php" method="post">
 				<label for="username">
@@ -67,7 +59,7 @@ include 'languages/'.languages($con).'.php';
 			</form>
 		</div>
 		<script>
-		document.querySelector(".login form").onsubmit = function(event) {
+        document.querySelector(".login form").onsubmit = function(event) {
 			event.preventDefault();
 			var form_data = new FormData(document.querySelector(".login form"));
 			var xhr = new XMLHttpRequest();

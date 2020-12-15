@@ -1,10 +1,10 @@
 <?php
 //Call main functions
 include '../main.php';
-check_loggedin($con);
+check_loggedin($pdo);
 //Call Language File
-languages($con);
-include '../languages/'.languages($con).'.php';
+languages($pdo);
+include '../languages/'.languages($pdo).'.php';
 // Default input product values
 $support = array(
 	'device_id' => '',
@@ -15,19 +15,15 @@ $date = new DateTime();
 
 if (isset($_GET['id'])) {
     // Get the account from the database
-    $stmt = $con->prepare('SELECT id, device_id, user_id, status, problem, solution, date, title FROM support WHERE id = ?');
-    $stmt->bind_param('i', $_GET['id']);
-    $stmt->execute();
-    $stmt->bind_result($support['id'], $support['device_id'], $support['user_id'], $support['status'], $support['problem'], $support['solution'], $support['date'], $support['title']);
-    $stmt->fetch();
-    $stmt->close();
+    $stmt = $pdo->prepare('SELECT * FROM support WHERE id = ?');
+    $stmt->execute([ $_GET['id'] ]);
+    $support = $stmt->fetch(PDO::FETCH_ASSOC);
     // ID param exists, edit an existing device
     $page = 'Edit';
     if (isset($_POST['submit'])) {
         // Update the device
-        $stmt = $con->prepare('UPDATE support SET device_id = ?, user_id = ?, status = ?, problem = ?, solution = ?, date = ?, title = ? WHERE id = ?');
-        $stmt->bind_param('sssssssi', $_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['solution'], $_POST['date'], $_POST['title'], $_GET['id']);
-        $stmt->execute();
+        $stmt = $pdo->prepare('UPDATE support SET device_id = ?, user_id = ?, status = ?, problem = ?, solution = ?, date = ?, title = ? WHERE id = ?');
+        $stmt->execute([$_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['solution'], $_POST['date'], $_POST['title'], $_GET['id'] ]);
         header('Location: index.php');
 		exit;
 		 
@@ -35,9 +31,8 @@ if (isset($_GET['id'])) {
     if (isset($_POST['close'])) {
         // Close the Ticket
 		$closed = '1';
-        $stmt = $con->prepare('UPDATE support SET status = ? WHERE id = ?');
-        $stmt->bind_param('si', $closed, $_GET['id']);
-        $stmt->execute();
+        $stmt = $pdo->prepare('UPDATE support SET status = ? WHERE id = ?');
+        $stmt->execute([ $closed, $_GET['id'] ]);
         header('Location: index.php');
         exit;
     }
@@ -45,9 +40,8 @@ if (isset($_GET['id'])) {
     // Create a new account
     $page = 'Create';
     if (isset($_POST['submit'])) {
-       $stmt = $con->prepare('INSERT IGNORE INTO support (device_id, user_id, status, problem, date, title) VALUES (?,?,?,?,?,?)');
-        $stmt->bind_param('ssssss', $_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['date'], $_POST['title']);
-        $stmt->execute();
+       $stmt = $pdo->prepare('INSERT IGNORE INTO support (device_id, user_id, status, problem, date, title) VALUES (?,?,?,?,?,?)');
+        $stmt->execute([ $_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['date'], $_POST['title'] ]);
         header('Location: index.php');
         exit;
     }

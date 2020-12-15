@@ -2,61 +2,50 @@
 // Include the root "main.php" file and check if user is logged-in...
 include_once '../config.php';
 include_once '../main.php';
-include '../languages/'.languages($con).'.php';
-check_loggedin($con, '../index.php');
-$stmt = $con->prepare('SELECT password, email, role, username FROM accounts WHERE id = ?');
-// Get the account info using the logged-in session ID
-$stmt->bind_param('i', $_SESSION['id']);
-$stmt->execute();
-$stmt->bind_result($password, $email, $role, $username);
-$stmt->fetch();
-$stmt->close();
+include '../languages/'.languages($pdo).'.php';
+check_loggedin($pdo, '../index.php');
+$stmt = $pdo->prepare('SELECT * FROM accounts WHERE id = ?');
+$stmt->execute([ $_SESSION['id'] ]);
+$account = $stmt->fetch(PDO::FETCH_ASSOC);
 // Check if the user is an admin...
-if ($role != 'Admin') {
+if ($account['role'] != 'Admin') {
     exit('You do not have permission to access this page!');
 }
 
 // query to get all accounts from the database
-$stmt = $con->prepare('SELECT id, username, password, email, activation_code, role FROM accounts ORDER BY id DESC LIMIT 5');
-$stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($id, $username, $password, $email, $activation_code, $role);
+$astmt = $pdo->prepare('SELECT * FROM accounts ORDER BY id DESC LIMIT 5');
+$astmt->execute();
+$astmt1 = $pdo->prepare('SELECT * FROM accounts ORDER BY id DESC');
+$astmt1->execute();
 // query to get all devices from the database
-$dtmt = $con->prepare('SELECT id, device_type, department, device_id, make, model FROM devices ORDER BY id DESC LIMIT 5');
+$dtmt = $pdo->prepare('SELECT * FROM devices ORDER BY id DESC LIMIT 5');
 $dtmt->execute();
-$dtmt->store_result();
-$dtmt->bind_result($id, $device_type, $department, $device_id, $make, $model);
+$devices = $dtmt->fetch(PDO::FETCH_ASSOC);
+$dtmt1 = $pdo->prepare('SELECT * FROM devices ORDER BY id DESC LIMIT 5');
+$dtmt1->execute();
 // query to get all support tickets from the database
-$xtmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 ORDER BY date DESC');
+$xtmt = $pdo->prepare('SELECT * FROM support WHERE status = 2 ORDER BY date DESC');
 $xtmt->execute();
-$xtmt->store_result();
-$xtmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
-// monthly tickets closed
-$ctmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 1 AND date >= DATE_SUB(now(),INTERVAL 1 WEEK) ');
-$ctmt->execute();
-$ctmt->store_result();
-$ctmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+$tickets = $xtmt->fetch(PDO::FETCH_ASSOC);
+// Weekly tickets closed
+$wtmt = $pdo->prepare('SELECT * FROM support WHERE status = 1 AND date >= DATE_SUB(now(),INTERVAL 1 WEEK) ');
+$wtmt->execute();
+$w1_tickets = $wtmt->fetch(PDO::FETCH_ASSOC);
 // Weekly Tickets open
-$otmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 AND date >= DATE_SUB(now(),INTERVAL 1 WEEK) ');
+$otmt = $pdo->prepare('SELECT * FROM support WHERE status = 2 AND date >= DATE_SUB(now(),INTERVAL 1 WEEK) ');
 $otmt->execute();
-$otmt->store_result();
-$otmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+$w2_tickets = $otmt->fetch(PDO::FETCH_ASSOC);
 // monthly tickets closed
-$c1tmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 1 AND date >= DATE_SUB(now(),INTERVAL 1 MONTH) ');
-$c1tmt->execute();
-$c1tmt->store_result();
-$c1tmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
+$ctmt = $pdo->prepare('SELECT * FROM support WHERE status = 1 AND date >= DATE_SUB(now(),INTERVAL 1 MONTH) ');
+$ctmt->execute();
+$m1_tickets = $ctmt->fetch(PDO::FETCH_ASSOC);
 // monthly tickets open
-$o1tmt = $con->prepare('SELECT id, device_id, user_id, status, problem, date FROM support WHERE status = 2 AND date >= DATE_SUB(now(),INTERVAL 1 MONTH) ');
+$o1tmt = $pdo->prepare('SELECT * FROM support WHERE status = 2 AND date >= DATE_SUB(now(),INTERVAL 1 MONTH) ');
 $o1tmt->execute();
-$o1tmt->store_result();
-$o1tmt->bind_result($id, $device_id, $user_id, $status, $problem, $date);
-
+$m2_tickets = $o1tmt->fetch(PDO::FETCH_ASSOC);
 // yearly tickets
-$ytmt = $con->prepare('SELECT id, date FROM support WHERE date >= DATE_SUB(now(),INTERVAL 1 YEAR) GROUP BY MONTH(date)');
+$ytmt = $pdo->prepare('SELECT id, date FROM support WHERE date >= DATE_SUB(now(),INTERVAL 1 YEAR) GROUP BY MONTH(date)');
 $ytmt->execute();
-$ytmt->store_result();
-$ytmt->bind_result($id, $date);
 
 // Template admin footer
 function template_admin_footer() {

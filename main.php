@@ -1,43 +1,36 @@
 <?php
 // The main file contains the database connection, session initializing, and functions, other PHP files will depend on this file.
-// Include the configuration file
+// Include thee configuration file
 include_once 'config.php';
-// We need to use sessions, so you should always start sessions using the below function
+// We need to use sessions, so you should always start sessions using the below code.
 session_start();
-// Connect to the MySQL database using MySQLi
-ini_set('display_errors',1);
-error_reporting(E_ALL);
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-$con = mysqli_connect(db_host, db_user, db_pass, db_name);
-if (mysqli_connect_errno()) {
-	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+// No need to edit below
+try {
+	$pdo = new PDO('mysql:host=' . db_host . ';dbname=' . db_name . ';charset=' . db_charset, db_user, db_pass);
+} catch (PDOException $exception) {
+	// If there is an error with the connection, stop the script and display the error.
+	exit('Failed to connect to database!');
 }
-// Update the charset
-mysqli_set_charset($con, db_charset);
 // The below function will check if the user is logged-in and also check the remember me cookie
-function check_loggedin($con, $redirect_file = URL_Site.'index.php') {
+function check_loggedin($pdo, $redirect_file = URL_Site.'index.php') {
 	// Check for remember me cookie variable and loggedin session variable
     if (isset($_COOKIE['rememberme']) && !empty($_COOKIE['rememberme']) && !isset($_SESSION['loggedin'])) {
     	// If the remember me cookie matches one in the database then we can update the session variables.
-    	$stmt = $con->prepare('SELECT id, username, role FROM accounts WHERE rememberme = ?');
-		$stmt->bind_param('s', $_COOKIE['rememberme']);
-		$stmt->execute();
-		$stmt->store_result();
-		if ($stmt->num_rows > 0) {
-			// Found a match, update the session variables and keep the user logged-in
-			$stmt->bind_result($id, $username, $role);
-			$stmt->fetch();
-            $stmt->close();
-			session_regenerate_id();
-			$_SESSION['loggedin'] = TRUE;
-			$_SESSION['name'] = $username;
-			$_SESSION['id'] = $id;
-			$_SESSION['role'] = $role;
-		} else {
-			// If the user is not remembered redirect to the login page.
-			header('Location: ' . $redirect_file);
-			exit;
-		}
+    	$stmt = $pdo->prepare('SELECT * FROM accounts WHERE rememberme = ?');
+    	$stmt->execute([ $_COOKIE['rememberme'] ]);
+    	$account = $stmt->fetch(PDO::FETCH_ASSOC);
+    	if ($account) {
+    		// Found a match, update the session variables and keep the user logged-in
+    		session_regenerate_id();
+    		$_SESSION['loggedin'] = TRUE;
+    		$_SESSION['name'] = $account['username'];
+    		$_SESSION['id'] = $account['id'];
+			$_SESSION['role'] = $account['role'];
+    	} else {
+    		// If the user is not remembered redirect to the login page.
+    		header('Location: ' . $redirect_file);
+    		exit;
+    	}
     } else if (!isset($_SESSION['loggedin'])) {
     	// If the user is not logged in redirect to the login page.
     	header('Location: ' . $redirect_file);
@@ -53,53 +46,43 @@ function send_activation_email($email, $code) {
 	mail($email, $subject, $email_template, $headers);
 }
 
-function languages($con) {
+function languages($pdo) {
 	// Check for language
-    
-    	$lang = $con->prepare('SELECT slug FROM languages WHERE active = 1');
-		$lang->execute();
-		$lang->store_result();
-		if ($lang->num_rows > 0) {
+    $lang = $pdo->prepare('SELECT slug FROM languages WHERE active = 1');
+	$lang->execute();
+	$languages = $lang->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($languages as $language){
+		if ($language['slug']) {
 			// Found a match
-			$lang->bind_result($slug);
-			$lang->fetch();
-            $lang->close();
 			session_regenerate_id();
-			$_SESSION['slug'] = $slug;
-			return $slug;
-		}
+			$_SESSION['slug'] = $language['slug'];
+			return $language['slug'];
+		} }
 }
 
-function loginAttempts($con, $update = TRUE) {
+function loginAttempts($pdo, $update = TRUE) {
 	$ip = $_SERVER['REMOTE_ADDR'];
 	$now = date('Y-m-d H:i:s');
 	if ($update) {
-		$stmt = $con->prepare('INSERT INTO login_attempts (ip_address, `date`) VALUES (?,?) ON DUPLICATE KEY UPDATE attempts_left = attempts_left - 1, `date` = VALUES(`date`)');
-		$stmt->bind_param('ss', $ip, $now);
-		$stmt->execute();
-		$stmt->close();
+		$stmt = $pdo->prepare('INSERT INTO login_attempts (ip_address, `date`) VALUES (?,?) ON DUPLICATE KEY UPDATE attempts_left = attempts_left - 1, `date` = VALUES(`date`)');
+		$stmt->execute([$ip,$now]);
 	}
-	$stmt = $con->prepare('SELECT * FROM login_attempts WHERE ip_address = ?');
-	$stmt->bind_param('s', $ip);
-	$stmt->execute();
-	$result = $stmt->get_result();
-	$login_attempts = $result->fetch_array(MYSQLI_ASSOC);
-	$stmt->close();
+	$stmt = $pdo->prepare('SELECT * FROM login_attempts WHERE ip_address = ?');
+	$stmt->execute([$ip]);
+	$login_attempts = $stmt->fetch(PDO::FETCH_ASSOC);
 	if ($login_attempts) {
 		// The user can try to login after 1 day... change the "+1 day" if you want increase/decrease this date.
 		$expire = date('Y-m-d H:i:s', strtotime('+1 day', strtotime($login_attempts['date'])));
 		if ($now > $expire) {
-			$stmt = $con->prepare('DELETE FROM login_attempts WHERE ip_address = ?');
-			$stmt->bind_param('s', $ip);
-			$stmt->execute();
-			$stmt->close();
+			$stmt = $pdo->prepare('DELETE FROM login_attempts WHERE ip_address = ?');
+			$stmt->execute([$ip]);
 			$login_attempts = array();
 		}
 	}
 	return $login_attempts;
 }
 // ICT Support Version
-$version = '0.0.06v';
+$version = '0.1.0v';
 
 // Template URLS
 $URL_HOME = URL_Site.'home.php';
@@ -143,4 +126,6 @@ function time_elapsed_string($datetime, $full = false) {
     if (!$full) $string = array_slice($string, 0, 1);
     return $string ? implode(', ', $string) . '' : 'just now';
 }
+
 ?>
+

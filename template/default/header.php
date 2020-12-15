@@ -3,9 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,minimum-scale=1">
-		<title><?php echo $lang_Home_Page; ?></title>
-		<link href="<?= URL_Site.'template/'.Site_Theme.'/';?>style.css" rel="stylesheet" type="text/css">
-		<script src="https://kit.fontawesome.com/ae1a122eb7.js" crossorigin="anonymous"></script>
+		<title><?php echo $Page_Name; ?></title>
+		<link href="<?= URL_Site.'template/'.Site_Theme.'/';?>style.css" rel="stylesheet" type="text/css" id="theme-link">
 		<script>
 		//Say Hi to the returning user
 			function hideLoadingDiv() {
@@ -21,10 +20,10 @@
     		x.className = "topnav";
   				}
 			}
-		
 		</script>
+		<script src="https://kit.fontawesome.com/ae1a122eb7.js" crossorigin="anonymous"></script>
 	</head>
-	<body class="loggedin" onload="hideLoadingDiv()">
+	<body class="loggedin light-theme" onload="hideLoadingDiv()">
 		<nav class="navtop">
 			<div class="topnav"  id="myTopnav">
 				<?php Add_Logo(); ?>
@@ -39,3 +38,7 @@
 				<a href="javascript:void(0);" class="icon" onclick="myMenu()"><i class="fa fa-bars"></i></a>
 			</div>
 		</nav>
+<div class="nightmode">
+		<i class="fas fa-moon" title="Night Mode"></i>
+		<label class="switch"><input type="checkbox" class="btn-toggle" id="btn-toggle"><span class="round"></span></label>
+		</div>

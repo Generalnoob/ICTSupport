@@ -1,15 +1,21 @@
+<?php
+include 'main.php';
+?>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,minimum-scale=1">
 		<title>Register</title>
-		<link href="style.css" rel="stylesheet" type="text/css">
+		<link href="<?= URL_Site.'template/'.Site_Theme.'/';?>style.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
 	</head>
 	<body>
 		<div class="register">
-			<h1>Register</h1>
+			<div class="logo_login">
+				<div class="logo_login_inner">
+			<?php Add_Logo(); ?>
+				</div></div>
 			<div class="links">
 				<a href="index.php">Login</a>
 				<a href="register.html" class="active">Register</a>

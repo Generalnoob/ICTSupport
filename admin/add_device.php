@@ -23,28 +23,23 @@ $devices_type = array('Tower PC', 'Mini PC', 'Laptop', 'Tablet', 'Phone');
 $devices_os = array('Windows 10', 'Windows 8', 'Windows 7', 'Windows vista', 'Windows XP', 'Linux', 'Suse', 'Redhat', 'Fedora', 'Centos', 'Ubuntu', 'Chrome OS', 'Mac OS', 'Apple iOS', 'Android');
 if (isset($_GET['id'])) {
     // Get the account from the database
-    $stmt = $con->prepare('SELECT id, device_type, department, device_id, motherboard, ram, processor, gpu, sound_card, wifi, bluetooth, simcard, make, model, camera, os FROM devices WHERE id = ?');
-    $stmt->bind_param('i', $_GET['id']);
-    $stmt->execute();
-    $stmt->bind_result($device['id'], $device['device_type'], $device['department'], $device['device_id'], $device['motherboard'], $device['ram'], $device['processor'], $device['gpu'], $device['sound_card'], $device['wifi'], $device['bluetooth'], $device['simcard'], $device['make'], $device['model'], $device['camera'], $device['device_os']);
-    $stmt->fetch();
-    $stmt->close();
+    $stmt = $pdo->prepare('SELECT * FROM devices WHERE id = ?');
+    $stmt->execute([ $_GET['id'] ]);
+	$device = $stmt->fetch(PDO::FETCH_ASSOC);
     // ID param exists, edit an existing device
     $page = 'Edit';
     if (isset($_POST['submit'])) {
         // Update the device
-        $stmt = $con->prepare('UPDATE devices SET device_type = ?, department = ?, device_id = ?, motherboard = ?, ram = ?, processor = ?, gpu = ?, sound_card = ?, wifi = ?, bluetooth = ?, simcard = ?, make = ?, model = ?, camera = ?, os = ? WHERE id = ?');
-        $stmt->bind_param('sssssssssssssssi', $_POST['device_type'], $_POST['department'], $_POST['device_id'], $_POST['motherboard'], $_POST['ram'], $_POST['processor'], $_POST['gpu'], $_POST['sound_card'], $_POST['wifi'], $_POST['bluetooth'], $_POST['simcard'], $_POST['make'], $_POST['model'], $_POST['camera'], $_POST['device_os'], $_GET['id']);
-        $stmt->execute();
+        $stmt = $pdo->prepare('UPDATE devices SET device_type = ?, department = ?, device_id = ?, motherboard = ?, ram = ?, processor = ?, gpu = ?, sound_card = ?, wifi = ?, bluetooth = ?, simcard = ?, make = ?, model = ?, camera = ?, os = ? WHERE id = ?');
+        $stmt->execute([ $_POST['device_type'], $_POST['department'], $_POST['device_id'], $_POST['motherboard'], $_POST['ram'], $_POST['processor'], $_POST['gpu'], $_POST['sound_card'], $_POST['wifi'], $_POST['bluetooth'], $_POST['simcard'], $_POST['make'], $_POST['model'], $_POST['camera'], $_POST['device_os'], $_GET['id'] ]);
         header('Location: devices.php');
 		exit;
 		 
     }
     if (isset($_POST['delete'])) {
         // Delete the account
-        $stmt = $con->prepare('DELETE FROM devices WHERE id = ?');
-        $stmt->bind_param('i', $_GET['id']);
-        $stmt->execute();
+        $stmt = $pdo->prepare('DELETE FROM devices WHERE id = ?');
+        $stmt->execute([ $_GET['id'] ]);
         header('Location: devices.php');
         exit;
     }
@@ -52,22 +47,25 @@ if (isset($_GET['id'])) {
     // Create a new account
     $page = 'Create';
     if (isset($_POST['submit'])) {
-       $stmt = $con->prepare('INSERT IGNORE INTO devices (device_type, department, device_id, motherboard, ram, processor, gpu, sound_card, wifi, bluetooth, simcard, make, model, camera, os) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
-        $stmt->bind_param('sssssssssssssss', $_POST['device_type'], $_POST['department'], $_POST['device_id'], $_POST['motherboard'], $_POST['ram'], $_POST['processor'], $_POST['gpu'], $_POST['sound_card'], $_POST['wifi'], $_POST['bluetooth'], $_POST['simcard'], $_POST['make'], $_POST['model'], $_POST['camera'], $_POST['device_os']);
-        $stmt->execute();
+		
+       $stmt = $pdo->prepare('INSERT IGNORE INTO devices (device_type, department, device_id, motherboard, ram, processor, gpu, sound_card, wifi, bluetooth, simcard, make, model, camera, os) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+        $stmt->execute([ $_POST['device_type'], $_POST['department'], $_POST['device_id'], $_POST['motherboard'], $_POST['ram'], $_POST['processor'], $_POST['gpu'], $_POST['sound_card'], $_POST['wifi'], $_POST['bluetooth'], $_POST['simcard'], $_POST['make'], $_POST['model'], $_POST['camera'], $_POST['device_os'] ]);
         header('Location: devices.php');
         exit;
     }
 }
+
 include 'header.php';
 ?>
-
+<script src="jquery-3.4.1.min.js" type="text/javascript"></script>
 <h2><?=$page?> Device</h2>
 
 <div class="content-block">
     <form action="" method="post" class="form responsive-width-100">
-        <label for="username">Device ID</label>
-        <input type="text" id="device_id" name="device_id" placeholder="Device ID" value="<?=$device['device_id']?>" required>
+        <label for="device_id">Device ID</label>
+		 <input type="text" id="device_id" name="device_id" placeholder="Device ID" value="<?=$device['device_id']?>" required>
+		<!-- Response -->
+   <div id="uname_response" ></div>
 		<label for="username">Device Type</label>
         <select id="device_type" name="device_type" style="margin-bottom: 30px;">
 			<?php if (isset ($device['device_type'])) {echo '<option value="'.$device['device_type'].'">'.$device['device_type'].'</option>';} ?>
@@ -136,5 +134,33 @@ include 'header.php';
         </div>
     </form>
 </div>
+<script type="text/javascript">
+$(document).ready(function(){
+
+   $("#device_id").keyup(function(){
+
+     var device_id = $(this).val().trim();
+
+     if(device_id != ''){
+
+        $.ajax({
+           url: 'ajaxfile.php',
+           type: 'post',
+           data: {device_id:device_id},
+           success: function(response){
+
+              // Show response
+              $("#uname_response").html(response);
+
+           }
+        });
+     }else{
+        $("#uname_response").html("");
+     }
+
+  });
+
+});
+</script>
 
 <?=template_admin_footer()?>

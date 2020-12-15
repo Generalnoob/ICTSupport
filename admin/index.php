@@ -12,8 +12,8 @@ include 'header.php';
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Task', 'This Weeks Tickets'],
-          ['Open Tickets',     <?php echo $otmt->num_rows;?>],
-          ['Closed Tickets',      <?php echo $ctmt->num_rows;?>],
+          ['Open Tickets',     <?php echo $otmt->rowCount();?>],
+          ['Closed Tickets',   <?php echo $wtmt->rowCount();?>],
         ]);
 
         var options = {
@@ -33,8 +33,8 @@ include 'header.php';
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Task', 'This Months Tickets'],
-          ['Open Tickets',     <?php echo $o1tmt->num_rows;?>],
-          ['Closed Tickets',      <?php echo $c1tmt->num_rows;?>],
+          ['Open Tickets',     <?php echo $o1tmt->rowCount();?>],
+          ['Closed Tickets',   <?php echo $ctmt->rowCount();?>],
         ]);
 
         var options = {
@@ -56,16 +56,14 @@ include 'header.php';
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
         ['Month',	'Tickets'],
-        <?php while ($ytmt->fetch()){
-	$daterounded = strtotime( $date );
+        <?php while ($ticket = $ytmt->fetch(PDO::FETCH_ASSOC)){
+	$daterounded = strtotime( $ticket['date'] );
 	$datea = date( 'M', $daterounded );
 	$dateb = date( 'm', $daterounded );
 	// Get number of tickets from year
-$dates = $con->prepare('SELECT id FROM support WHERE MONTH(date)='.$dateb.'');
-$dates->execute();
-$dates->store_result();
-$dates->bind_result($id);
-    echo "['".$datea."',".$dates->num_rows."],";
+	$dates = $pdo->prepare('SELECT id FROM support WHERE MONTH(date)='.$dateb.'');
+	$dates->execute();
+    echo "['".$datea."',".$dates->rowCount()."],";
 } ?>
     ]);
 
@@ -84,7 +82,7 @@ $dates->bind_result($id);
 <div class="content-block-short">
     <div class="table_users">
 		<div class="title">Latest Accounts</div>
-		<div class="sub_title">Total Users: <?php echo $stmt->num_rows; ?></div>
+		<div class="sub_title">Total Users: <?php echo $astmt1->rowCount(); ?></div>
         <table  cellspacing="0" style="width:500px;">
             <thead>
                 <tr>
@@ -95,17 +93,17 @@ $dates->bind_result($id);
                 </tr>
             </thead>
             <tbody>
-                <?php if ($stmt->num_rows == 0): ?>
+                <?php if ($stmt->rowCount() == 0): ?>
                 <tr>
                     <td colspan="8" style="text-align:center;">There are no accounts</td>
                 </tr>
                 <?php else: ?>
-                <?php while ($stmt->fetch()): ?>
-                <tr class="details" onclick="location.href='account.php?id=<?=$id?>'">
+                <?php while ($account = $astmt->fetch(PDO::FETCH_ASSOC)): ?>
+                <tr class="details" onclick="location.href='account.php?id=<?=$account['id']?>'">
                     <td></td>
-                    <td><?=$username?></td>                 
-                    <td><?=$email?></td>
-                    <td><?=$role?></td>
+                    <td><?=$account['username']?></td>                 
+                    <td><?=$account['email']?></td>
+                    <td><?=$account['role']?></td>
                 </tr>
                 <?php endwhile; ?>
                 <?php endif; ?>
@@ -115,7 +113,7 @@ $dates->bind_result($id);
 	</div><div class="content-block-short">
 	<div class="table_devices">
 		<div class="title">Latest Devices</div>
-		<div class="sub_title">Total Devices: <?php  echo $dtmt->num_rows; ?></div>
+		<div class="sub_title">Total Devices: <?php  echo $dtmt1->rowCount(); ?></div>
         <table  cellspacing="0" style="width:500px;">
             <thead>
                 <tr>
@@ -128,19 +126,19 @@ $dates->bind_result($id);
                 </tr>
             </thead>
             <tbody>
-                <?php if ($stmt->num_rows == 0): ?>
+                <?php if ($dtmt1->rowCount() == 0): ?>
                 <tr>
                     <td colspan="8" style="text-align:center;">There are no support Tickets</td>
                 </tr>
                 <?php else: ?>
-                <?php while ($dtmt->fetch()): ?>
+                <?php while ($device = $dtmt->fetch(PDO::FETCH_ASSOC)): ?>
                 <tr class="details" onclick="location.href='add_device.php?id=<?=$id?>'">
                     <td></td>
-                    <td><?=$device_id?></td>                 
-                    <td><?=$device_type?></td>
-                    <td><?=$department?></td>
-                    <td><?=$make?></td>
-					<td><?=$model?></td>
+                    <td><?=$device['device_id']?></td>                 
+                    <td><?=$device['device_type']?></td>
+                    <td><?=$device['department']?></td>
+                    <td><?=$device['make']?></td>
+					<td><?=$device['model']?></td>
                 </tr>
                 <?php endwhile; ?>
                 <?php endif; ?>
