@@ -3,7 +3,8 @@ include 'main.php';
 check_loggedin($pdo);
 languages($pdo);
 include 'languages/'.languages($pdo).'.php';
-include 'template/'.Site_Theme.'/header.php'; 
+$Page_Name = 'Home Page';
+include 'template/'.Site_Theme.'/header.php';
 ?>
 		<div class="content">
 			<h3>Home Page</h3>
@@ -15,5 +16,4 @@ include 'template/'.Site_Theme.'/header.php';
 						<div class="homepage"><a href="logout.php"><i class="fas fa-sign-out-alt"></i></br>Logout</a></div>
 			</div></div>
 		</div>
-<div class="hiUser" id="hiUser" name="hiUser"><?php echo $lang_Welcome_Back; ?>, <?=$_SESSION['name']?>!</div>
 <?php include 'template/'.Site_Theme.'/footer.php'; ?>

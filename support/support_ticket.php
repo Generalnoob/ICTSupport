@@ -103,9 +103,9 @@ include '../template/'.Site_Theme.'/header.php'; ?>
         <textarea id="response" name="response" placeholder="" required></textarea>
 		<p></p>
         <div class="submit-btns">
-            <input type="submit" name="submit" value="Submit">
+			<div class="submit-btns-left"><input type="submit" name="submit" value="Submit"></div>
             <?php if ($page == 'Update'): ?>
-            <input type="submit" name="close" value="close" class="delete">
+            <div class="submit-btns-left"><input type="submit" name="close" value="close" class="delete"></div>
             <?php endif; ?>
         </div>
     </form>

@@ -1,7 +1,7 @@
 @import 'style_light.css';
 @import 'style_dark.css';
 
-* {box-sizing: border-box;font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;font-size: 16px;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
+* {box-sizing: border-box;font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
 
 .switch {position: relative;display: inline-block;width: 30px;height: 14px;}
 .switch input {opacity: 0;width: 0;height: 0;display:none;}

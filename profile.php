@@ -3,6 +3,7 @@ include 'main.php';
 check_loggedin($pdo);
 languages($pdo);
 include 'languages/'.languages($pdo).'.php';
+$Page_Name = 'Profile Page';
 include 'template/'.Site_Theme.'/header.php';
 // output message (errors, etc)
 $msg = '';
@@ -97,6 +98,6 @@ if (isset($_POST['username'], $_POST['password'], $_POST['cpassword'], $_POST['e
 				</form>
 			</div>
 		</div>
-		<?php endif; ?>
-	</body>
-</html>
+		<?php endif; 
+include 'template/'.Site_Theme.'/footer.php';
+?>

@@ -5,22 +5,6 @@
 		<meta name="viewport" content="width=device-width,minimum-scale=1">
 		<title><?php echo $Page_Name; ?></title>
 		<link href="<?= URL_Site.'template/'.Site_Theme.'/';?>style.css" rel="stylesheet" type="text/css" id="theme-link">
-		<script>
-		//Say Hi to the returning user
-			function hideLoadingDiv() {
-  			setTimeout(function(){
-    		document.getElementById('hiUser').classList.add('hidden');
-  				},10000)
-}		//Responsive Menu
-		function myMenu() { 
-			var x = document.getElementById("myTopnav");
-  			if (x.className === "topnav") {
-    		x.className += " responsive";
-  				} else {
-    		x.className = "topnav";
-  				}
-			}
-		</script>
 		<script src="https://kit.fontawesome.com/ae1a122eb7.js" crossorigin="anonymous"></script>
 	</head>
 	<body class="loggedin light-theme" onload="hideLoadingDiv()">

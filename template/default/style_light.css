@@ -12,7 +12,7 @@ body.light-theme .grey{color:#6B6B6B!important;}
 
 body.light-theme .device_type{overflow:hidden;display:block;text-align: center;}
 
-body.light-theme .device_type i{font-size: 70px;text-align: center;padding:5px;}
+body.light-theme .device_type i{font-size: 70px;text-align: center;padding:10px;}
 
 body.light-theme .ticket_details{overflow:hidden;float:left;width:250px;} 
 
@@ -22,13 +22,15 @@ body.light-theme .title {width:100%;padding:5px;font-weight: bold;}
 
 body.light-theme .container{overflow:hidden;display:block;margin:0px auto;width:800px;}
 
-body.light-theme .problem {width:100%;height:50px;font-weight: normal;padding:5px;}
+body.light-theme .problem {width:100%;height:50px;font-weight: normal;padding:5px;font-size:13px;}
 
-body.light-theme .details{border: 1px solid #ccc;overflow: hidden;background-color:#fff;display:block;float:left;width:250px;margin:10px 10px 0px 0px;border-radius: 6px;color:#0D1117;}
+body.light-theme .details{border: 1px solid #ccc;overflow: hidden;background-color:#fff;display:block;float:left;width:250px;margin:10px 10px 0px 0px;border-radius: 6px;color:#262626;}
 
 body.light-theme .response{font-weight:normal; padding:5px;display:block;float:left;overflow: hidden;}
 
-body.light-theme .response_user{overflow:hidden;padding:5px;width:100%;height:43px;}
+body.light-theme .response_all{font-weight:normal; overflow: hidden;background-color:#BFBFBF;color:#2D2D2D;font-size:13px!important;}
+
+body.light-theme .response_user{overflow:hidden;padding:5px;width:100%;height:50px;}
 
 body.light-theme .no_reply{text-align: center;}
 
@@ -40,13 +42,19 @@ body.light-theme .username{font-weight: bold;}
 
 body.light-theme .user_response{}
 
+body.light-theme .activity{font-size:13px;}
+
 body.light-theme .specs{background-color: aliceblue; padding:10px;margin: 5px;}
 
 body.light-theme .footer{width:100%; text-align: center;padding:5px;color:#3B3B3B;}
 
+body.light-theme .footer a{color:#3B3B3B; text-decoration: none;}
+
+body.light-theme .footer a:visited{color:#3B3B3B;}
+
 body.light-theme .head_banners{color: #000;}
 
-body.light-theme .pagination{padding:5px; color:#fff;}
+body.light-theme .pagination{padding:5px; color:#999;}
 
 body.light-theme .pagination a{background-color: #2f3947;color:#fff;text-decoration: none;padding:0px 5px 0px 5px;margin-right: 5px;}
 
@@ -148,7 +156,9 @@ body.light-theme .loggedin {background-color: #06090F;}
 
 body.light-theme .content {width: 1000px;margin: 0 auto;}
 
-body.light-theme .content h2 {margin: 0;padding: 25px 0;font-size: 22px;border-bottom: 1px solid #e0e0e3;color: #4a536e;}
+body.light-theme .content h2 {margin: 0;padding: 25px 0;font-size: 22px;border-bottom: 0px solid #e0e0e3;color: #4a536e;}
+
+body.light-theme .content h3 {margin: 0;padding: 25px 0;font-size: 22px;border-bottom: 0px solid #e0e0e3;color: #4a536e;}
 
 body.light-theme .content .block {box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);margin: 25px 0;padding: 25px;background-color: #fff;overflow:hidden;}
 
@@ -182,6 +192,7 @@ body.light-theme .topnav.responsive {position: relative;}
 body.light-theme .topnav.responsive a.icon {position: absolute;right: 0;top: 0;}
 body.light-theme .topnav.responsive a {float: none;display: block;text-align: left;}
 body.light-theme .container{overflow:hidden;display:block;margin:0px auto;width:270px;}
+body.light-theme .block .form textarea {height: 200px;width:260px;}
 }
 
 @media screen and (max-width: 1000px) {
@@ -206,8 +217,6 @@ body.light-theme .block .form input, main .form textarea, main .form select {wid
 
 body.light-theme .block .form input:hover, main .form input:active, main .form textarea:hover, main .form textarea:active, main .form select:hover, main .form select:active {border-bottom: 1px solid #b7b7ba;}
 
-body.light-theme .block .form textarea {height: 200px;}
-
 body.light-theme .block .form input[type="submit"] {background: #4e5c70;border: 0;color: #FFFFFF;width: 50%;padding: 12px 0;font-size: 14px;font-weight: 600;cursor: pointer;}
 
 body.light-theme .block .form input[type="submit"]:hover {background: #434f61;}
@@ -222,9 +231,13 @@ body.light-theme .block .form button:hover {background-color: #d6d6d8;}
 
 body.light-theme .block .form div {margin-bottom: 25px;}
 
-body.light-theme .block .form .submit-btns {display: flex;}
+body.light-theme .block .form .submit-btns {}
 
-body.light-theme .block .form .submit-btns input:first-child {margin-right: 15px;}
+body.light-theme .submit-btns-left{float:left;display:inline-block;}
+
+body.light-theme .block .form textarea {height: 200px;}
+
+body.light-theme .block .form .submit-btns input{margin-right: 15px;width:120px;}
 
 body.light-theme .block .form .submit-btns .delete {background-color: #b22b2b;}
 

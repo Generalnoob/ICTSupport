@@ -61,8 +61,7 @@ include '../template/'.Site_Theme.'/header.php'; ?>
 						if ($device['device_type'] == 'Tablet'){echo '<i class="fas fa-tablet-alt"></i>';}
 						if ($device['device_type'] == 'Phone'){echo '<i class="fas fa-mobile-alt"></i>';}} ?>
 					</div>
-					<div class="device_id"><i class="fas fa-address-card" title="<?php echo $lang_Device_ID; ?>"></i> <?=$ticket['device_id']?></div>
-                    <div class="title"><?php echo substr($ticket['title'], 0, 20); echo strlen($ticket['title']) > 20 ? '...' : ''; ?></div>
+					<div class="title"><?php echo substr($ticket['title'], 0, 20); echo strlen($ticket['title']) > 20 ? '...' : ''; ?></div>
 					<div class="problem"><?php echo substr($ticket['problem'], 0, 50); echo strlen($ticket['problem']) > 50 ? '...' : ''; ?></div>
                     
 				<?php 	
@@ -75,17 +74,19 @@ include '../template/'.Site_Theme.'/header.php'; ?>
 						$rstmts1 = $rstmt1->fetchAll(PDO::FETCH_ASSOC); 
 					
 					if ($rstmt->rowCount() <= 0){ ?>
-						 <div class="response_user"><div class="response_small"><i class="response_grey fas fa-comments" title="'.$lang_No_Response.'"></i></div><div class="response_large"> <?php echo $lang_No_Response;?></div></div>
+						 <div class="response_user"><i class="response_grey fas fa-comments" title="'.$lang_No_Response.'"></i> <?php echo $lang_No_Response;?><div class="activity">Last Activity: None</div></div>
 					
 					<?php } else { foreach ($rstmts1 as $response_read){ ?>
 					<div class="response_user">
-						<?php if ($response_read['response_read'] == '2'){echo '<i class="response_red fas fa-comments" title="'.$lang_Admin_Responded.'"></i> ';} else {if ($response_read['response_read'] == '1'){echo '<i class="response_green fas fa-comments" title="'.$lang_User_Responded.'"></i> ';} else {echo '<i class="response_grey fas fa-comments" title="No Response"></i> ';}}?><?php if ($response_read['response_read'] == '2'){echo $lang_Admin_Responded;} else {if ($response_read['response_read'] == '1'){echo $lang_User_Responded;}}?><br>
+						<?php if ($response_read['response_read'] == '2'){echo '<i class="response_red fas fa-comments" title="'.$lang_Admin_Responded.'"></i> ';} else {if ($response_read['response_read'] == '1'){echo '<i class="response_green fas fa-comments" title="'.$lang_User_Responded.'"></i> ';} else {echo '<i class="response_grey fas fa-comments" title="No Response"></i> ';}}?><?php if ($response_read['response_read'] == '2'){echo $lang_Admin_Responded;} else {if ($response_read['response_read'] == '1'){echo $lang_User_Responded;}}?><div class="activity">
 							Last Activity: <?php $date3 = date_create($response_read['date']); echo date_format($date3,"H:i d/m/Y"); ?>
-						</div>
+						</div></div>
 					<?php } }?>
-					<div class="response"><?php if ($ticket['status'] == 1){echo '<div class="response_small"><i class="red fas fa-lock"></i></div><div class="response_large">'.$lang_Closed.'</div>';} else {echo '<div class="response_small"><i class="fas fa-unlock"></i></div><div class="response_large">'.$lang_Open.'</div>';}; ?></div>
-					<div class="response"><i class="fas fa-calendar-week" title="<?php echo $lang_Date; ?>"></i> <?php echo time_elapsed_string($ticket['date'], true); ?></div>
-		   </div>
+					<div class="response_all">
+					<div class="response"><?php if ($ticket['status'] == 1){echo '<div class="response_small"><i class="fas fa-circle red"></i></div><div class="response_large">'.$lang_Closed.'</div>';} else {echo '<div class="response_small"><i class="fas fa-circle green"></i></div><div class="response_large">'.$lang_Open.'</div>';}; ?></div>
+					<div class="response"><i class="fas fa-calendar-week" title="<?php echo $lang_Date; ?>"></i> <?php $date4 = date_create($ticket['date']); echo date_format($date4,"H:i d/m/Y"); ?></div>
+					<div class="device_id"><i class="fas fa-address-card" title="<?php echo $lang_Device_ID; ?>"></i> <?=$ticket['device_id']?></div>
+					</div></div>
                 <?php } ?>
 					
 				<?php endif; 
