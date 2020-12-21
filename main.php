@@ -82,7 +82,7 @@ function loginAttempts($pdo, $update = TRUE) {
 	return $login_attempts;
 }
 // ICT Support Version
-$version = '0.1.1v';
+$version = '0.1.2v';
 
 // Template URLS
 $URL_HOME = URL_Site.'home.php';

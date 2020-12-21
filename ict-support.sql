@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS `support` (
   	`problem` LONGTEXT NOT NULL,
 	`solution` LONGTEXT NOT NULL,
 	`date` varchar(255) NOT NULL,
+	`priority` varchar(255) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;

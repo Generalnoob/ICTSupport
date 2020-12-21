@@ -53,5 +53,6 @@ $lang_Input_Is_Empty = 'The input fields must not be empty!';
 $lang_Input_Is_Empty = 'The input fields must not be empty!';
 $lang_Input_Is_Empty = 'The input fields must not be empty!';
 $lang_Input_Is_Empty = 'The input fields must not be empty!';
+$lang_priority = 'Priority';
 
 ?>

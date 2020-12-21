@@ -100,6 +100,18 @@ aside a:hover {
 
 .title {font-weight: bold;font-size: 1.5em;}
 .sub_title {font-weight: bold;font-size: 1em;}
+.donut_sub {overflow:hidden;display: flex;justify-content: center;}
+.donut_stats {float:left;margin-right:10px;background-color:#C7C7C7;color:#2D2D2D;text-align: center; padding:10px;}
+.stats_all {display:flex; float:left;}
+.stats_low {display:flex; float:left;margin-left:5px;}
+.stats_med {display:flex; float:left;margin-left:5px;}
+.stats_high {display:flex; float:left;margin-left:5px;}
+.stats_details {display:flex; float:left;background-color: #E3E3E3;color:#2d2d2d;text-align: center;}
+.details_stats {padding:10px;font-size: 15px;font-weight:bold;}
+.stats_all .stats_details i{display:flex; float:left;background-color: #3070A4;color:#fff;padding:10px 10px 10px 10px;vertical-align: middle;font-size: 42px;}
+.stats_low .stats_details i{display:flex; float:left;background-color: #50B04B;color:#fff;padding:10px 10px 10px 10px;vertical-align: middle;font-size: 42px;}
+.stats_med .stats_details i{display:flex; float:left;background-color: #CC8A2B;color:#fff;padding:10px 10px 10px 10px;vertical-align: middle;font-size: 42px;}
+.stats_high .stats_details i{display:flex; float:left;background-color: #B31B1E;color:#fff;padding:10px 10px 10px 10px;vertical-align: middle;font-size: 42px;}
 
 main {
   padding: 30px;

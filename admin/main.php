@@ -46,6 +46,22 @@ $m2_tickets = $o1tmt->fetch(PDO::FETCH_ASSOC);
 // yearly tickets
 $ytmt = $pdo->prepare('SELECT id, date FROM support WHERE date >= DATE_SUB(now(),INTERVAL 1 YEAR) GROUP BY MONTH(date)');
 $ytmt->execute();
+// Stats get all open tickets
+$statsall = $pdo->prepare('SELECT * FROM support WHERE status = 2');
+$statsall->execute();
+$stats_all = $statsall->fetch(PDO::FETCH_ASSOC);
+// Stats get low priority tickets
+$statslow = $pdo->prepare('SELECT * FROM support WHERE status = 2 AND priority = 1');
+$statslow->execute();
+$stats_low = $statslow->fetch(PDO::FETCH_ASSOC);
+// Stats get medium priority tickets
+$statsmed = $pdo->prepare('SELECT * FROM support WHERE status = 2 AND priority = 2');
+$statsmed->execute();
+$stats_med = $statsmed->fetch(PDO::FETCH_ASSOC);
+// Stats get high priority tickets
+$statshigh = $pdo->prepare('SELECT * FROM support WHERE status = 2 AND priority = 3');
+$statshigh->execute();
+$stats_high = $statshigh->fetch(PDO::FETCH_ASSOC);
 
 // Template admin footer
 function template_admin_footer() {

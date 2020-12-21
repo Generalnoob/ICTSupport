@@ -22,8 +22,8 @@ if (isset($_GET['id'])) {
     $page = 'Edit';
     if (isset($_POST['submit'])) {
         // Update the device
-        $stmt = $pdo->prepare('UPDATE support SET device_id = ?, user_id = ?, status = ?, problem = ?, solution = ?, date = ?, title = ? WHERE id = ?');
-        $stmt->execute([$_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['solution'], $_POST['date'], $_POST['title'], $_GET['id'] ]);
+        $stmt = $pdo->prepare('UPDATE support SET device_id = ?, user_id = ?, status = ?, problem = ?, solution = ?, date = ?, title = ?, priority = ? WHERE id = ?');
+        $stmt->execute([$_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['solution'], $_POST['date'], $_POST['title'], $_POST['priority'], $_GET['id'] ]);
         header('Location: index.php');
 		exit;
 		 
@@ -40,8 +40,8 @@ if (isset($_GET['id'])) {
     // Create a new account
     $page = 'Create';
     if (isset($_POST['submit'])) {
-       $stmt = $pdo->prepare('INSERT IGNORE INTO support (device_id, user_id, status, problem, date, title) VALUES (?,?,?,?,?,?)');
-        $stmt->execute([ $_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['date'], $_POST['title'] ]);
+       $stmt = $pdo->prepare('INSERT IGNORE INTO support (device_id, user_id, status, problem, date, title, priority) VALUES (?,?,?,?,?,?,?)');
+        $stmt->execute([ $_POST['device_id'], $_POST['user_id'], $_POST['status'], $_POST['problem'], $_POST['date'], $_POST['title'], $_POST['priority'] ]);
         header('Location: index.php');
         exit;
     }
@@ -64,6 +64,12 @@ include '../template/'.Site_Theme.'/header.php'; ?>
 		<input type="hidden" id="date" name="date" value="<?php if (isset ($support['date'])){ echo $support['date']; } else { echo $date->format('Y-m-d H:i:s'); } ?>" required>
 		<input type="hidden" id="status" name="status" value="2" required>
 		<input type="hidden" id="response" name="response" value="3" required>
+		<label for="username"><?php echo $lang_priority; ?></label>
+		<select id="priority" name="priority" required>
+		<option value="1">Low</option>
+		<option value="2">Medium</option>
+		<option value="3">High</option>
+		</select>
 		<label for="username"><?php echo $lang_Device_ID; ?></label>
         <input type="text" id="device_id" name="device_id" placeholder="e.g. 002" value="<?=$support['device_id']?>" required>
 		<label for="username"><?php echo $lang_Device_Title; ?></label>
